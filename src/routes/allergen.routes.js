@@ -1,13 +1,13 @@
 import {Router} from "express";
-import { methods as allergenController } from "../controllers/allergen.controller";
+import AllergenController from "../controllers/allergen.controller";
 
 const router = Router();
 
-router.get("/allergen", allergenController.getAllergens);
-router.get("/allergen/:id", allergenController.getAllergen);
-router.post("/allergen", allergenController.addAllergen);
-router.put("/allergen/:id", allergenController.updateAllergen);
-router.delete("/allergen/:id", allergenController.deleteAllergen);
+router.get("/allergen", AllergenController.getAllergens);
+router.get("/allergen/:id", AllergenController.getAllergen);
+router.post("/allergen", AllergenController.addAllergen);
+router.put("/allergen/:id", AllergenController.updateAllergen);
+router.delete("/allergen/:id", AllergenController.deleteAllergen);
 
 
 export default router;

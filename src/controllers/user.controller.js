@@ -1,87 +1,80 @@
-import { restart } from "nodemon";
+import HTMLResponse from '../output/htmlResponse.output';
 import { getConnection } from "../database/database";
 
 const getUsers = async (req, res) => {
+    const response = new HTMLResponse(req, res);
     try {
         const Connection = await getConnection();
         const result = await Connection.query("SELECT id, name, lastName, type, email FROM user");
-        console.log(JSON.stringify(result, null, 2));
-        res.json(result);
+        return response.success('Users Retrieved successfully', result);
     } catch (error) {
-        res.status(500);
-        res.send(error.message)
+        return response.error(error);
     }
 }
 
 const getUser = async (req, res) => {
+    const response = new HTMLResponse(req, res);
     try {
         console.log(req.params);
-        const {id} = req.params;
+        const { id } = req.params;
         const Connection = await getConnection();
         const result = await Connection.query("SELECT id, name, lastName, type, email FROM user WHERE id = ?", id);
-        console.log(JSON.stringify(result, null, 2));
-        res.json(result);
+        return response.success('User Retrieved successfully', result);
     } catch (error) {
-        res.status(500);
-        res.send(error.message)
+        return response.error(error);
     }
 }
 
 const addUser = async (req, res) => {
+    const response = new HTMLResponse(req, res);
     try {
-        const {name, lastName, type, email} = req.body;
+        const { name, lastName, type, email } = req.body;
 
-        if (name == undefined || lastName== undefined || type== undefined || email== undefined){
-            restart.status(400).json({message: "Los campos Nombre, Apellidos, Tipo de usuario e email deben estar rellenos"});
-        } 
+        if (name == undefined || lastName == undefined || type == undefined || email == undefined) {
+            return response.badRequest('Missing one of these fields: Nombre, Apellidos, Tipo de usuario, email')
+        }
 
-        const user = {name, lastName, type, email};
+        const user = { name, lastName, type, email };
         const Connection = await getConnection();
         const result = await Connection.query("INSERT INTO allergen SET ?", user);
-        res.json("Se ha añadido correctamente");
-        
+        return response.success('User Created successfully', result);
     } catch (error) {
-        res.status(500);
-        res.send(error.message)
+        return response.error(error);
     }
 }
 
 const updateUser = async (req, res) => {
+    const response = new HTMLResponse(req, res);
     try {
-        console.log(req.params);
-        const {id} = req.params;
-        const {name, lastName, type, email} = req.body;
+        const { id } = req.params;
+        const { name, lastName, type, email } = req.body;
 
-        if (id == undefined ||name == undefined || lastName== undefined || type== undefined || email== undefined){
-            restart.status(400).json({message: "Los campos Nombre, Apellidos, Tipo de usuario e email deben estar rellenos"});
-        } 
+        if (id == undefined || name == undefined || lastName == undefined || type == undefined || email == undefined) {
+            return response.badRequest('Missing one of these fields: Nombre, Apellidos, Tipo de usuario, email')
+        }
 
-        const order = {id, name, lastName, type, email};
+        const order = { id, name, lastName, type, email };
         const Connection = await getConnection();
         const result = await Connection.query("UPDATE user SET ? WHERE id = ?", [order, id]);
-        console.log(JSON.stringify(result, null, 2));
-        res.json(result);
+        return response.success('User Updated successfully', result);
     } catch (error) {
-        res.status(500);
-        res.send(error.message)
+        return response.error(error);
     }
 }
 
 const deleteUser = async (req, res) => {
+    const response = new HTMLResponse(req, res);
     try {
-        console.log(req.params);
-        const {id} = req.params;
+        const { id } = req.params;
         const Connection = await getConnection();
         const result = await Connection.query("DELETE FROM user WHERE id = ?", id);
-        console.log(JSON.stringify(result, null, 2));
-        res.json(result);
+        return response.success('User Deleted successfully', result);
     } catch (error) {
-        res.status(500);
-        res.send(error.message)
+        return response.error(error);
     }
 }
 
-export const methods = {
+export default {
     getUsers,
     getUser,
     addUser,

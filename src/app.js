@@ -9,6 +9,7 @@ import productAllergenRelRoutes from "./routes/productAllergenRel.routes";
 import requestLineRoutes from "./routes/requestLine.routes";
 import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes"
+import AppMidlewares from "./middlewares/app.middleware"
 
 const app=express();
 
@@ -21,6 +22,7 @@ app.use(morgan("dev"));
 app.use(express.urlencoded({extends:true}));
 app.use(express.json());
 app.use(cors());
+app.use(AppMidlewares.authApp);
 
 //Routes
 app.use("/api", productRoutes);
