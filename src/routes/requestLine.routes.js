@@ -3,12 +3,12 @@ import RequestLineController from "../controllers/requestLine.controller";
 
 const router = Router();
 
-router.get("/requestLine/product/:id", RequestLineController.getRequestLinesByProduct);
-router.get("/requestLine/request/:id", RequestLineController.getRequestLinesByRequest);
-router.get("/requestLine", RequestLineController.getRequestLines);
-router.get("/requestLine/:id", RequestLineController.getRequestLine);
-router.post("/requestLine", RequestLineController.addRequestLine);
-router.delete("/requestLine/:id", RequestLineController.deleteRequestLine);
+router.get("/order/:order/line/product/:id", RequestLineController.getRequestLinesByProduct);
+router.get("/order/:order/line/request/:id", RequestLineController.getRequestLinesByRequest);
+router.get("/order/:order/", RequestLineController.getRequestLines);
+router.get("/order/:order/line/:id", RequestLineController.getRequestLine);
+router.post("/order/:order/line", RequestLineController.addRequestLine);
+router.delete("/order/:order/line/:id", RequestLineController.deleteRequestLine);
 
 
 export default router;

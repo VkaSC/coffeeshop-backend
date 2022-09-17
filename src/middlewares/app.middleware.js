@@ -1,16 +1,21 @@
 import HTMLResponse from '../output/htmlResponse.output'
 import JWTUtils from '../utils/jwt.utils';
+import { getConnection } from "../database/database";
 
 export default class AppMiddlewares {
 
     static async authApp(req, res, next) {
+        const jwtUtils = new JWTUtils();
+        /*const Connection = await getConnection();
+        const result = await Connection.query('Select id, scope, secret from app where Name = ?', 'SUSI');
+        console.log(jwtUtils.generateApp(JWTUtils.getAppPayload(result)));*/
         const response = new HTMLResponse(req, res);
         if (!req.header(JWTUtils.APP_AUTH_HEADER)) {
             return response.badRequest('Not ' + JWTUtils.APP_AUTH_HEADER + ' header on request', HTMLResponse.MISSING_API_KEY_STATUS);
         }
         try {
             const token = req.header(JWTUtils.APP_AUTH_HEADER);
-            const jwtUtils = new JWTUtils();
+            //const jwtUtils = new JWTUtils();
             const tokenVerification = jwtUtils.verifyApp(token);
             if (tokenVerification.success || tokenVerification.reason === JWTUtils.EXPIRED_ERROR) {
                 if (tokenVerification.decoded.type !== JWTUtils.APP_TOKEN)

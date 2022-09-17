@@ -20,11 +20,11 @@ create table if not exists product(
     price decimal(6,2)
 ) character set = 'utf8';
 
-create table if not exists apps(
+create table if not exists app(
     id int unsigned primary key auto_increment,
     name varchar(100) not null,
-    token varchar(255) unique not null,
-    secret varchar(100) not null,
+    token varchar(255) unique,
+    secret varchar(100) unique,
     scope enum("ReadOnly", "FullAccess"),
     active boolean not null default false,
     blocked boolean not null default false
@@ -34,10 +34,9 @@ create table if not exists apps(
 create table if not exists request(
     id int unsigned primary key auto_increment,
     device varchar(100),
-    requestDay date,
-    requestHour time,
-    user_id int unsigned not null,
-    foreign key (user_id) references user (id) on update cascade on delete restrict
+    date bigint not null,
+    userId int unsigned,
+    foreign key (userId) references user (id) on update cascade on delete restrict
 ) character set = 'utf8';
 
 create table if not exists allergen(
@@ -47,22 +46,24 @@ create table if not exists allergen(
     details varchar(255)
 ) character set = 'utf8';
 
-create table if not exists product_allergen_relationship(
+create table if not exists product_allergens(
     id int unsigned primary key auto_increment,
-    product_id int unsigned not null,
-    allergen_id int unsigned not null,
-    foreign key (product_id) references product (id) on update cascade on delete restrict,
-    foreign key (allergen_id) references allergen (id) on update cascade on delete restrict    
+    productId int unsigned not null,
+    allergenId int unsigned not null,
+    foreign key (productId) references product (id) on update cascade on delete restrict,
+    foreign key (allergenId) references allergen (id) on update cascade on delete restrict    
 )character set = 'utf8';
 
-create table if not exists product_request_relationship(
+create table if not exists request_line(
     id int unsigned primary key auto_increment,
-    product_id int unsigned not null,
-    request_id int unsigned not null,
+    productId int unsigned not null,
+    requestId int unsigned not null,
     quantity int unsigned not null,
-    foreign key (product_id) references product (id) on update cascade on delete restrict,
-    foreign key (request_id) references request (id) on update cascade on delete restrict    
+    foreign key (productId) references product (id) on update cascade on delete restrict,
+    foreign key (requestId) references request (id) on update cascade on delete restrict    
 )character set = 'utf8';
+
+insert into app (name, scope, token) values ('SUSI', 'FullAccess', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXBwLXRva2VuIiwiaWF0IjoxNjYzMzYzNzc0LCJleHAiOjE2NjM0NTAxNzR9.fBQ0DZca6y107WLWJgHQgxrmgA7iu_D535pNjkd5zi0');
 
 insert into product (name, type, category, details, price) values ('Café Solo', 'Grupo 1', 'Cafe', 'Café en vaso de 180ml', 1.0 );
 insert into product (name, type, category, details, price) values ('Infusión en Agua', 'Grupo 1', 'Cafe', 'Infusión en vaso de 180ml', 1.0 );

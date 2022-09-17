@@ -19,7 +19,7 @@ app.set ("port", 4000);
 //Middleware (intermediarios): operaciones intermedia que se realizan antes de ejecutar la información. 
     //Generalmente son temas de seguridad o comprobación y se usa cuando es susceptible de ser usado de forma mas o menos generica.
 app.use(morgan("dev"));
-app.use(express.urlencoded({extends:true}));
+app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(cors());
 app.use(AppMidlewares.authApp);

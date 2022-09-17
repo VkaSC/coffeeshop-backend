@@ -16,7 +16,7 @@ export default class JWTUtils {
     static CASE_STATUS_ACTION = 'case_status';
 
     // Header
-    static USER_AUTH_HEADER = 'access_token';
+    static USER_AUTH_HEADER = 'Authorization';
     static APP_AUTH_HEADER = 'api_key';
 
     // Errors
@@ -38,7 +38,7 @@ export default class JWTUtils {
 
     static getUserPayload(user) {
         return {
-            id: user._id,
+            id: user.id,
             email: user.email,
             username: user.username,
             profile: user.profile,
@@ -49,7 +49,7 @@ export default class JWTUtils {
 
     static getAppPayload(authApp) {
         return {
-            clientId: authApp._id,
+            clientId: authApp.id,
             scope: authApp.scope,
             secret: authApp.secret,
             type: JWTUtils.APP_TOKEN
