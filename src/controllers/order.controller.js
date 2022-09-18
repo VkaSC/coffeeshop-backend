@@ -2,6 +2,7 @@ import HTMLResponse from '../output/htmlResponse.output';
 import BaseController from '../utils/base.controller';
 import Order from '../models/order.model'; 
 import Utils from '../utils/core.utils';
+import OrderLine from '../models/orderLine.model';
 
 
 
@@ -29,7 +30,14 @@ export default class OrderController extends BaseController {
         try {
             const { id } = req.params;
             const result = await this.query("SELECT " + Order.visibleFields().join(', ') + " FROM " + Order.table() + " WHERE id = ?", id);
-            return response.success('Order Retrieved successfully', result);
+            const order = new Order(result);
+            if (req.query.expand) {
+                if (req.query.expand.toLowerCase() === "true") {
+                    const orderLines = await this.query("SELECT " + OrderLine.visibleFields().join(', ') + " FROM " + OrderLine.table() + " WHERE requestId = ?", id);
+                    order.lines = Utils.forceArray(orderLines);
+                }
+            }
+            return response.success('Order Retrieved successfully', order);
         } catch (error) {
             return response.error(error);
         }
