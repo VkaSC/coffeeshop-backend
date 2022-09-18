@@ -52,7 +52,7 @@ export default class AllergenController extends BaseController {
             return response.error(error);
         }
     }
-    º
+    
     async get(req, res) {
         const response = new HTMLResponse(req, res);
         try {
@@ -68,7 +68,7 @@ export default class AllergenController extends BaseController {
         const response = new HTMLResponse(req, res);
         try {
             const allergen = new Allergen(req.body);
-            const result = await this.query("INSERT INTO allergen SET ?", allergen);
+            const result = await this.query("INSERT INTO " + Allergen.table() + "SET ?", allergen);
             const id = result.insertId;
             const data = await this.query("SELECT " + Allergen.visibleFields().join(', ') + " FROM " + Allergen.table() + " WHERE id = ?", id);
             return response.success('Allergen created successfully', data);
@@ -82,7 +82,7 @@ export default class AllergenController extends BaseController {
         try {
             const { id } = req.params;
             const allergen = new Allergen(req.body);
-            const result = await this.query("UPDATE allergen SET ? WHERE id = ?", [allergen, id]);
+            const result = await this.query("UPDATE " + Allergen.table() + " SET ? WHERE id = ?", [allergen, id]);
             const data = await this.query("SELECT " + Allergen.visibleFields().join(', ') + " FROM " + Allergen.table() + " WHERE id = ?", id);
             return response.success('Allergen updated successfully', data);
         } catch (error) {

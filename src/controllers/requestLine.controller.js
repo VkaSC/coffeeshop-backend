@@ -1,89 +1,71 @@
 import HTMLResponse from '../output/htmlResponse.output';
-import { getConnection } from "../database/database";
+import BaseController from '../utils/base.controller';
+import OrderLine from '../models/orderLine.model';
+import Utils from '../utils/core.utils';
 
-const getRequestLinesByProduct = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const { id } = req.params;
-        const Connection = await getConnection();
-        const result = await Connection.query("SELECT id, product_id, request_id, quantity FROM product_request_relationship WHERE product_id = ?", id);
-        return response.success('Order Request Lines Retrieved successfully', result);
-    } catch (error) {
-        return response.error(error);
-    }
-}
+export default class RequestLineController extends BaseController {
 
-const getRequestLinesByRequest = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const { id } = req.params;
-        const Connection = await getConnection();
-        const result = await Connection.query("SELECT id, product_id, request_id, quantity FROM product_request_relationship WHERE request_id = ?", id);
-        return response.success('Order Request Lines Retrieved successfully', result);
-    } catch (error) {
-        return response.error(error);
-    }
-}
-
-const getRequestLines = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const Connection = await getConnection();
-        const result = await Connection.query("SELECT id, product_id, request_id, quantity FROM product_request_relationship");
-        return response.success('Order Request Lines Retrieved successfully', result);
-    } catch (error) {
-        return response.error(error);
-    }
-}
-
-const getRequestLine = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const { id } = req.params;
-        const Connection = await getConnection();
-        const result = await Connection.query("SELECT id, product_id, request_id, quantity FROM product_request_relationship WHERE id = ?", id);
-        return response.success('Order Request Line Retrieved successfully', result);
-    } catch (error) {
-        return response.error(error);
-    }
-}
-
-const addRequestLine = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const { product_id, request_id, quantity } = req.body;
-
-        if (product_id == undefined || request_id == undefined || quantity == undefined) {
-            return response.badRequest('Missing one of these fields: product_id, request_id, cantidad');
+    async list(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            let queryParameters = [];
+            const fields = this.getQueryFields(req, Product.visibleFields());
+            let query = "SELECT " + field.join(', ') + "FROM " + Product.table();
+            query += this.createWhereClause(req, Product.visibleFields(), queryParameters);
+            query += this.createOrderByCaluse(req, Product.visibleFields());
+            query += this.createLimitClause(req);
+            const result = await this.query(query, queryParameters);
+            return response.success('Products Retrieved successfully', result);
+        } catch (error) {
+            return response.error(error);
         }
-
-        const RequestLine = { product_id, request_id, quantity };
-        const Connection = await getConnection();
-        const result = await Connection.query("INSERT INTO product_request_relationship SET ?", RequestLine);
-        return response.success('Request Line Created successfully', result);
-    } catch (error) {
-        return response.error(error);
     }
+
+    async get(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            const { id } = req.params;
+            const result = await this.query("SELECT " + OrderLine.visibleFields().join(', ') + " FROM " + OrderLine.table() + " WHERE id = ?", id);
+            return response.success('Order Request Lines Retrieved successfully', result);
+        } catch (error) {
+            return response.error(error);
+        }
+    }
+
+    async create(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            const orderLine = new OrderLine(req.body)
+    
+            if (OrderLine.productId == undefined || OrderLine.requestId == undefined || OrderLine.quantity == undefined) {
+                return response.badRequest('Missing one of these fields: product_id, request_id, cantidad');
+            }
+            const result = await Connection.query("INSERT " + OrderLine.table() + " product SET ?", orderLine);
+            const id = result.insertId;
+            const data = await this.query("INSERT " + OrderLine.visibleFields().join(', ') + " FROM " + OrderLine.table() + "WHER id = ?", id);
+            return response.success('Request Line Created successfully', data);
+        } catch (error) {
+            return response.error(error);
+        }
+    }
+
+    async delete(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            const { id } = req.params;
+            const Connection = await getConnection();
+            const result = await Connection.query("DELETE FROM " + OrderLine.table() + " WHERE id = ?", id);
+            return response.success('Request Line Deleted successfully');
+        } catch (error) {
+            return response.error(error);
+        }
+    }
+
 }
 
 
-const deleteRequestLine = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const { id } = req.params;
-        const Connection = await getConnection();
-        const result = await Connection.query("DELETE FROM product_request_relationship WHERE id = ?", id);
-        return response.success('Request Line Deleted successfully');
-    } catch (error) {
-        return response.error(error);
-    }
-}
 
-export default {
-    getRequestLinesByProduct,
-    getRequestLinesByRequest,
-    getRequestLine,
-    getRequestLines,
-    addRequestLine,
-    deleteRequestLine
-};
+
+
+
+

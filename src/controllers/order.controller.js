@@ -1,86 +1,98 @@
 import HTMLResponse from '../output/htmlResponse.output';
-import { getConnection } from "../database/database";
-import Request from '../models/request.model';
+import BaseController from '../utils/base.controller';
+import Order from '../models/order.model'; 
+import Utils from '../utils/core.utils';
 
-const getOrders = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const Connection = await getConnection();
-        const result = await Connection.query("SELECT " + Request.visibleFields().join(', ') + " FROM " + Request.table());
-        return response.success('Orders Retrieved successfully', result);
-    } catch (error) {
-        return response.error(error);
-    }
-}
 
-const getOrder = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const { id } = req.params;
-        const Connection = await getConnection();
-        const result = await Connection.query("SELECT " + Request.visibleFields().join(', ') + " FROM " + Request.table() + " WHERE id = ?", id);
-        return response.success('Order Retrieved successfully', result);
-    } catch (error) {
-        return response.error(error);
-    }
-}
 
-const addOrder = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const order = new Request(req.body);
 
-        if (order.date == undefined) {
-            return response.badRequest('Missing one of these fields: date')
+export default class OrderController extends BaseController {
+
+    async  list(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            let queryParameters = [];
+            const field = this.getQueryField(req, Order.visibleFields());
+            let query = "SELECT " + field.join(', ') + "FROM " + Order.table();
+            query += this.createWhereClause(req, Order.visibleFields(), queryParameters);
+            query += this.createOrderByCaluse (req, Order.visibleFields());
+            query += this.createLimitClause(req);
+            const result = await this.query(query, queryParameters);
+            return response.success('Orders Retrieved successfully', result);
+        } catch (error) {
+            return response.error(error);
         }
-        if (order.userId == undefined && order.device == undefined) {
-            return response.badRequest('The order must be linked to an user or a device')
-        }
-        const Connection = await getConnection();
-        const result = await Connection.query("INSERT INTO " + Request.table() + " SET ?", order.toSQL());
-        return response.success('Order created successfully', result);
-    } catch (error) {
-        return response.error(error);
     }
+
+    async get(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            const { id } = req.params;
+            const result = await this.query("SELECT " + Order.visibleFields().join(', ') + " FROM " + Order.table() + " WHERE id = ?", id);
+            return response.success('Order Retrieved successfully', result);
+        } catch (error) {
+            return response.error(error);
+        }
+    }
+
+    async create(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            const order = new Order(req.body);
+
+            if (order.date == undefined) {
+                return response.badRequest('Missing one of these fields: date')
+            }
+            if (order.userId == undefined && order.device == undefined) {
+                return response.badRequest('The order must be linked to an user or a device')
+            }
+
+            const result = await this.query("INSERT INTO " + Order.table() + " SET ?", order.toSQL());
+            const id = result.insertId;
+            const data = await this.query("INSERT " + Order.visibleFields().join(', ') + " FROM " + Order.table() + "WHER id = ?", id);
+            return response.success('Order created successfully', data);
+        } catch (error) {
+            return response.error(error);
+        }
+    }
+
+    async update(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            const { id } = req.params;
+            const order = new Order(req.body);
+    
+            if (order.date == undefined) {
+                return response.badRequest('Missing one of these fields: date')
+            }
+            if (order.userId == undefined && order.device == undefined) {
+                return response.badRequest('The order must be linked to an user or a device')
+            }
+    
+            const result = await this.query("UPDATE " + Order.table() + " SET ? WHERE id = ?", [order.toSQL(), id]);
+            const data = await this.query("SELECT " + Order.visibleFields().join(', ') + " FROM " + Order.table() + " WHERE id = ?", id);
+            return response.success('Order updated successfully', data);
+        } catch (error) {
+            return response.error(error);
+        }
+    }
+
+    async delete(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            const { id } = req.params;
+            const result = await this.query("DELETE FROM " + Order.table() + " WHERE id = ?", id);
+            return response.success('Order deleted successfully');
+        } catch (error) {
+            return response.error(error);
+        }
+    }
+
 }
 
-const updateOrder = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        console.log(req.params);
-        const { id } = req.params;
-        const order = new Request(req.body);
 
-        if (order.date == undefined) {
-            return response.badRequest('Missing one of these fields: date')
-        }
-        if (order.userId == undefined && order.device == undefined) {
-            return response.badRequest('The order must be linked to an user or a device')
-        }
-        const Connection = await getConnection();
-        const result = await Connection.query("UPDATE " + Request.table() + " SET ? WHERE id = ?", [order.toSQL(), id]);
-        return response.success('Order updated successfully', result);
-    } catch (error) {
-        return response.error(error);
-    }
-}
 
-const deleteOrder = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const { id } = req.params;
-        const Connection = await getConnection();
-        const result = await Connection.query("DELETE FROM " + Request.table() + " WHERE id = ?", id);
-        return response.success('Order deleted successfully');
-    } catch (error) {
-        return response.error(error);
-    }
-}
 
-export default {
-    getOrders,
-    getOrder,
-    addOrder,
-    updateOrder,
-    deleteOrder
-};
+
+
+

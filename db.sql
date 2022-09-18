@@ -36,6 +36,7 @@ create table if not exists request(
     device varchar(100),
     date bigint not null,
     userId int unsigned,
+    total int unsigned,
     foreign key (userId) references user (id) on update cascade on delete restrict
 ) character set = 'utf8';
 
@@ -59,6 +60,7 @@ create table if not exists request_line(
     productId int unsigned not null,
     requestId int unsigned not null,
     quantity int unsigned not null,
+    total int unsigned,
     foreign key (productId) references product (id) on update cascade on delete restrict,
     foreign key (requestId) references request (id) on update cascade on delete restrict    
 )character set = 'utf8';

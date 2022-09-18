@@ -1,10 +1,11 @@
 import Utils from '../utils/core.utils';
 
-export default class Request {
+export default class Order {
     id;
     device;
     date;
     userId;
+    total;
     lines;
 
     constructor(obj) {
@@ -13,6 +14,7 @@ export default class Request {
             this.device = obj.device;
             this.date = obj.date;
             this.userId = obj.userId;
+            this.total = obj.total;
             this.lines = obj.lines;
         }
     }
@@ -25,9 +27,9 @@ export default class Request {
         return [
             'id',
             'device',
-            'day',
-            'hour',
+            'date',
             'userId',
+            `total`,
         ];
     }
 

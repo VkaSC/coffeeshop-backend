@@ -1,10 +1,11 @@
 import Utils from '../utils/core.utils';
 
-export default class RequestLine {
+export default class OrderLine {
     id;
     productId;
     requestId;
     quantity;
+    total;
 
     constructor(obj) {
         if (Utils.isObject(obj)) {
@@ -12,6 +13,8 @@ export default class RequestLine {
             this.productId = obj.productId;
             this.requestId = obj.requestId;
             this.quantity = obj.quantity;
+            this.total = obj.total;
+
         }
     }
 
@@ -25,6 +28,8 @@ export default class RequestLine {
             'productId',
             'requestId',
             'quantity',
+            'total',
+
         ];
     }
 }

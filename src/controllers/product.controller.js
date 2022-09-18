@@ -1,82 +1,80 @@
 import HTMLResponse from '../output/htmlResponse.output';
-import { getConnection } from "./../database/database";
+import BaseController from '../utils/base.controller';
+import Product from '../models/product.model';
+import Utils from '../utils/core.utils';
 
-const getProducts = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const Connection = await getConnection();
-        const result = await Connection.query("SELECT id, name, type, category, details, price FROM product");
-        return response.success('Products Retrieved successfully', result);
-    } catch (error) {
-        return response.error(error);
+export default class ProductControler extends BaseController {
+    async list(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            let queryParameters = [];
+            const fields = this.getQueryFields(req, Product.visibleFields());
+            let query = "SELECT " + field.join(', ') + "FROM " + Product.table();
+            query += this.createWhereClause(req, Product.visibleFields(), queryParameters);
+            query += this.createOrderByCaluse(req, Product.visibleFields());
+            query += this.createLimitClause(req);
+            const result = await this.query(query, queryParameters);
+            return response.success('Products Retrieved successfully', result);
+        } catch (error) {
+            return response.error(error);
+        }
     }
-}
 
-const getProduct = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const {id} = req.params;
-        const Connection = await getConnection();
-        const result = await Connection.query("SELECT id, name, type, category, details, price FROM product WHERE id = ?", id);
-        return response.success('Product Retrieved successfully', result);
-    } catch (error) {
-        return response.error(error);
+    async get(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            const { id } = req.params;
+            const result = await this.query("SELECT " + Product.visibleFields().join(', ') + " FROM " + Product.table() + " WHERE id = ?", id);
+            return response.success('Product Retrieved successfully', result);
+        } catch (error) {
+            return response.error(error);
+        }
     }
-}
 
-const addProduct = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const {name, type, category, details, price} = req.body;
+    async create(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            const product = new Product(req.body)
+    
+            if (product.name == undefined || product.type == undefined || product.category == undefined || product.price == undefined) {
+                return response.badRequest('Missing one of these fields: nombre, grupo, categoria, pvp');
+            }
 
-        if (name == undefined || type== undefined || category== undefined ||price== undefined){
-            return response.badRequest('Missing one of these fields: nombre, grupo, categoria, pvp');
-        } 
-
-        const product = {name, type, category, details, price};
-        const Connection = await getConnection();
-        const result = await Connection.query("INSERT INTO product SET ?", product);
-        return response.success('Product Created successfully', result);
-    } catch (error) {
-        return response.error(error);
+            const result = await Connection.query("INSERT " + Product.table() + " product SET ?", product);
+            const id = result.insertId;
+            const data = await this.query("INSERT " + Product.visibleFields().join(', ') + " FROM " + Product.table() + "WHER id = ?", id);
+            return response.success('Product Created successfully', data);
+        } catch (error) {
+            return response.error(error);
+        }
     }
-}
 
-const updateProduct = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const {id} = req.params;
-        const {name, type, category, details, price} = req.body;
-
-        if (id == undefined ||name == undefined || type== undefined || category== undefined ||price== undefined){
-            return response.badRequest('Missing one of these fields: nombre, grupo, categoria, pvp');
-        } 
-
-        const product = {id, name, type, category, details, price};
-        const Connection = await getConnection();
-        const result = await Connection.query("UPDATE product SET ? WHERE id = ?", [product, id]);
-        return response.success('Product Updated successfully', result);
-    } catch (error) {
-        return response.error(error);
+    async update(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            const { id } = req.params;
+            const product = new Product(req.body);
+            if (product.id == undefined || product.name == undefined || product.type == undefined || product.category == undefined || product.price == undefined) {
+                return response.badRequest('Missing one of these fields: nombre, grupo, categoria, pvp');
+            }
+    
+            const result = await Connection.query("UPDATE " + Product.table() + " SET ? WHERE id = ?", [product, id]);
+            const data = await this.query("SELECT " + Product.visibleFields().join(', ') + " FROM " + Product.table() + " WHERE id = ?", id);            
+            return response.success('Product Updated successfully', data);
+        } catch (error) {
+            return response.error(error);
+        }
     }
-}
 
-const deleteProduct = async (req, res) => {
-    const response = new HTMLResponse(req, res);
-    try {
-        const {id} = req.params;
-        const Connection = await getConnection();
-        const result = await Connection.query("DELETE FROM product WHERE id = ?", id);
-        return response.success('Product Deleted successfully');
-    } catch (error) {
-        return response.error(error);
+    async delete(req, res) {
+        const response = new HTMLResponse(req, res);
+        try {
+            const { id } = req.params;
+            const result = await Connection.query("DELETE FROM " + Product.table() + " WHERE id = ?", id);
+            return response.success('Product Deleted successfully');
+        } catch (error) {
+            return response.error(error);
+        }
     }
-}
 
-export default {
-    getProducts,
-    getProduct,
-    addProduct,
-    updateProduct,
-    deleteProduct
-};
+}
