@@ -1,12 +1,14 @@
 import {Router} from "express";
-import ProductAllergenRelController from "../controllers/productAllergenRel.controller";
+import ProductAllergenController from "../controllers/productAllergen.controller";
 
+
+const controller = new ProductAllergenController();
 const router = Router();
 
-router.get("/productAllergenRel/product/:id", ProductAllergenRelController.getProductByAllergen);
-router.get("/productAllergenRel/allergen/:id", ProductAllergenRelController.getAllergenByProduct);
-router.post("/productAllergenRel", ProductAllergenRelController.addProductAllergenRel);
-router.delete("/productAllergenRel/:id", ProductAllergenRelController.deleteProductAllergenRel);
+router.get("/productAllergen/product/:id", controller.list);
+router.get("/productAllergen/allergen/:id", controller.get);
+router.post("/productAllergen", controller.create);
+router.delete("/productAllergen/:id", controller.delete);
 
 
 export default router;

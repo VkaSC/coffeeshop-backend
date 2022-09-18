@@ -24,8 +24,8 @@ export default class RequestLineController extends BaseController {
     async get(req, res) {
         const response = new HTMLResponse(req, res);
         try {
-            const { id } = req.params;
-            const result = await this.query("SELECT " + OrderLine.visibleFields().join(', ') + " FROM " + OrderLine.table() + " WHERE id = ?", id);
+            const { id, order } = req.params;
+            const result = await this.query("SELECT " + OrderLine.visibleFields().join(', ') + " FROM " + OrderLine.table() + " WHERE id = ? AND requestId = ?", [id, order]);
             return response.success('Order Request Lines Retrieved successfully', result);
         } catch (error) {
             return response.error(error);
@@ -52,9 +52,9 @@ export default class RequestLineController extends BaseController {
     async delete(req, res) {
         const response = new HTMLResponse(req, res);
         try {
-            const { id } = req.params;
+            const { id, order } = req.params;
             const Connection = await getConnection();
-            const result = await Connection.query("DELETE FROM " + OrderLine.table() + " WHERE id = ?", id);
+            const result = await Connection.query("DELETE FROM " + OrderLine.table() + " WHERE id = ? AND requestId = ?", [id, order]);
             return response.success('Request Line Deleted successfully');
         } catch (error) {
             return response.error(error);
