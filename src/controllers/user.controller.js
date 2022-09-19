@@ -10,14 +10,15 @@ export default class UserControler extends BaseController {
         const response = new HTMLResponse(req, res);
         try {
             let queryParameters = [];
-            const fields = this.getQueryFields(req, Product.visibleFields());
-            let query = "SELECT " + field.join(', ') + "FROM " + Product.table();
-            query += this.createWhereClause(req, Product.visibleFields(), queryParameters);
-            query += this.createOrderByCaluse(req, Product.visibleFields());
+            const fields = this.getQueryFields(req, User.visibleFields());
+            let query = "SELECT " + fields.join(', ') + " FROM " + User.table();
+            query += this.createWhereClause(req, User.visibleFields(), queryParameters);
+            query += this.createOrderByCaluse(req, User.visibleFields());
             query += this.createLimitClause(req);
             const result = await this.query(query, queryParameters);
             return response.success('Products Retrieved successfully', result);
         } catch (error) {
+            console.log(error);
             return response.error(error);
         }
     }
@@ -73,7 +74,7 @@ export default class UserControler extends BaseController {
         const response = new HTMLResponse(req, res);
         try {
             const { id } = req.params;
-            const result = await Connection.query("DELETE FROM " + User.table() + " WHERE id = ?", id);
+            const result = await this.query("DELETE FROM " + User.table() + " WHERE id = ?", id);
             return response.success('User Deleted successfully', result);
         } catch (error) {
             return response.error(error);

@@ -49,6 +49,7 @@ export default class AllergenController extends BaseController {
             const result = await this.query(query, queryParameters);
             return response.success('Allergens retrieved successfully', result);
         } catch (error) {
+            console.log(error);
             return response.error(error);
         }
     }

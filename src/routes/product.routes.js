@@ -5,11 +5,11 @@ import ProductController from "./../controllers/product.controller";
 const controller = new ProductController();
 const router = Router();
 
-router.get("/product", controller.list);
-router.get("/product/:id", controller.get);
-router.post("/product", controller.create);
-router.put("/product/:id", controller.update);
-router.delete("/product/:id", controller.delete);
+router.get("/product", controller.list.bind(controller));
+router.get("/product/:id", controller.get.bind(controller));
+router.post("/product", controller.create.bind(controller));
+router.put("/product/:id", controller.update.bind(controller));
+router.delete("/product/:id", controller.delete.bind(controller));
 
 
 export default router;

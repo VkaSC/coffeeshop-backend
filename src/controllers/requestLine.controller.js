@@ -9,13 +9,13 @@ export default class RequestLineController extends BaseController {
         const response = new HTMLResponse(req, res);
         try {
             let queryParameters = [];
-            const fields = this.getQueryFields(req, Product.visibleFields());
-            let query = "SELECT " + field.join(', ') + "FROM " + Product.table();
-            query += this.createWhereClause(req, Product.visibleFields(), queryParameters);
-            query += this.createOrderByCaluse(req, Product.visibleFields());
+            const fields = this.getQueryFields(req, OrderLine.visibleFields());
+            let query = "SELECT " + fields.join(', ') + " FROM " + Product.table();
+            query += this.createWhereClause(req, OrderLine.visibleFields(), queryParameters);
+            query += this.createOrderByCaluse(req, OrderLine.visibleFields());
             query += this.createLimitClause(req);
             const result = await this.query(query, queryParameters);
-            return response.success('Products Retrieved successfully', result);
+            return response.success('Order Lines Retrieved successfully', result);
         } catch (error) {
             return response.error(error);
         }
@@ -26,7 +26,7 @@ export default class RequestLineController extends BaseController {
         try {
             const { id, order } = req.params;
             const result = await this.query("SELECT " + OrderLine.visibleFields().join(', ') + " FROM " + OrderLine.table() + " WHERE id = ? AND requestId = ?", [id, order]);
-            return response.success('Order Request Lines Retrieved successfully', result);
+            return response.success('Order Lines Retrieved successfully', result);
         } catch (error) {
             return response.error(error);
         }
@@ -43,7 +43,7 @@ export default class RequestLineController extends BaseController {
             const result = await Connection.query("INSERT " + OrderLine.table() + " product SET ?", orderLine);
             const id = result.insertId;
             const data = await this.query("INSERT " + OrderLine.visibleFields().join(', ') + " FROM " + OrderLine.table() + "WHER id = ?", id);
-            return response.success('Request Line Created successfully', data);
+            return response.success('Order Line Created successfully', data);
         } catch (error) {
             return response.error(error);
         }
@@ -55,7 +55,7 @@ export default class RequestLineController extends BaseController {
             const { id, order } = req.params;
             const Connection = await getConnection();
             const result = await Connection.query("DELETE FROM " + OrderLine.table() + " WHERE id = ? AND requestId = ?", [id, order]);
-            return response.success('Request Line Deleted successfully');
+            return response.success('Order Line Deleted successfully');
         } catch (error) {
             return response.error(error);
         }

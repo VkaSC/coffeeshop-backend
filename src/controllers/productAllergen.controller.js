@@ -9,10 +9,10 @@ export default class ProductAllergenController extends BaseController {
         const response = new HTMLResponse(req, res);
         try {
             let queryParameters = [];
-            const field = this.getQueryField(req, Order.visibleFields());
-            let query = "SELECT " + field.join(', ') + "FROM " + ProductAllergen.table();
-            query += this.createWhereClause(req, Order.visibleFields(), queryParameters);
-            query += this.createOrderByCaluse (req, Order.visibleFields());
+            const fields = this.getQueryFields(req, ProductAllergen.visibleFields());
+            let query = "SELECT " + fields.join(', ') + " FROM " + ProductAllergen.table();
+            query += this.createWhereClause(req, ProductAllergen.visibleFields(), queryParameters);
+            query += this.createOrderByCaluse (req, ProductAllergen.visibleFields());
             query += this.createLimitClause(req);
             const result = await this.query(query, queryParameters);
             return response.success('Products Allergens Retrieved successfully', result);

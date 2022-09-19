@@ -4,18 +4,20 @@ import Product from '../models/product.model';
 import Utils from '../utils/core.utils';
 
 export default class ProductControler extends BaseController {
+
     async list(req, res) {
         const response = new HTMLResponse(req, res);
         try {
             let queryParameters = [];
             const fields = this.getQueryFields(req, Product.visibleFields());
-            let query = "SELECT " + field.join(', ') + "FROM " + Product.table();
+            let query = "SELECT " + fields.join(', ') + " FROM " + Product.table();
             query += this.createWhereClause(req, Product.visibleFields(), queryParameters);
             query += this.createOrderByCaluse(req, Product.visibleFields());
             query += this.createLimitClause(req);
             const result = await this.query(query, queryParameters);
             return response.success('Products Retrieved successfully', result);
         } catch (error) {
+            console.log(error);
             return response.error(error);
         }
     }

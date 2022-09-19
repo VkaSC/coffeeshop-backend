@@ -1,7 +1,7 @@
 import HTMLResponse from '../output/htmlResponse.output';
-import { getConnection } from "../database/database";
+import Database from '../database/database';
 import { StrUtils } from "./str.utils";
-import { Utils } from "../utils/jwt.utils";
+import Utils from "../utils/core.utils";
 
 const operators = {
     eq: '{field} = ?',
@@ -17,6 +17,10 @@ const operators = {
 };
 
 export default class BaseController {
+
+    constructor(){
+
+    }
 
     // The API REST allow to the users to select the fields to retrieve
     // with the query parameter "fields" like "fields=field1,field2,field3..."
@@ -51,7 +55,7 @@ export default class BaseController {
             limit = 200;
         }
         const offset = req.query.start ? Number(req.query.start) : 0;
-        limitClause = ' LIMIT ' + limit + ' OFFSET ' + offset;
+        const limitClause = ' LIMIT ' + limit + ' OFFSET ' + offset;
         return limitClause;
     }
 
@@ -141,8 +145,7 @@ export default class BaseController {
     }
 
     query(query, params) {
-        const connection = getConnection();
-        return connection.query(query, params);
+        return Database.getInstance().query(query, params);
     }
 
     async get(req, res) {

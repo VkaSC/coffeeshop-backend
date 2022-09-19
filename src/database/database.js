@@ -1,17 +1,43 @@
-import mysql from "promise-mysql";
+import { createConnection } from "promise-mysql";
 import config from "./../config";
 
-const connection=mysql.createConnection({
-    host:config.host,
-    database:config.database,
-    user:config.user,
-    password:config.password
-});
+let instance;
+let connection;
 
-const getConnection=()=>{
-    return connection;
-};
+export default class Database {
 
-module.exports = {
-    getConnection
-};
+    constructor() {
+
+    }
+
+    query(query, params) {
+        console.log(connection);
+        return connection ? connection.query(query, params) : undefined;
+    }
+
+    async open() {
+        if (!connection) {
+            connection = await createConnection({
+                host: config.host,
+                database: config.database,
+                user: config.user,
+                password: config.password
+            });
+        }
+    }
+
+    close() {
+        if (connection) {
+            connection.end();
+            connection = undefined;
+        }
+    }
+
+    static getInstance() {
+        if (!instance) {
+            instance = new Database();
+        }
+        return instance;
+    }
+
+}

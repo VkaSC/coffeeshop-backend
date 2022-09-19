@@ -13,14 +13,15 @@ export default class OrderController extends BaseController {
         const response = new HTMLResponse(req, res);
         try {
             let queryParameters = [];
-            const field = this.getQueryField(req, Order.visibleFields());
-            let query = "SELECT " + field.join(', ') + "FROM " + Order.table();
+            const fields = this.getQueryFields(req, Order.visibleFields());
+            let query = "SELECT " + fields.join(', ') + " FROM " + Order.table();
             query += this.createWhereClause(req, Order.visibleFields(), queryParameters);
             query += this.createOrderByCaluse (req, Order.visibleFields());
             query += this.createLimitClause(req);
             const result = await this.query(query, queryParameters);
             return response.success('Orders Retrieved successfully', result);
         } catch (error) {
+            console.log(error);
             return response.error(error);
         }
     }
