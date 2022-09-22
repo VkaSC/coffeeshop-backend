@@ -9,7 +9,7 @@ export default class JWTUtils {
     static USER_TOKEN = 'user-token';
 
     // Actions
-    static APP_LOGGING_ACTION = 'app_logging';
+    static APP_AUTH_ACTION = 'app_auth';
     static ACTIVATE_ACTION = 'activate';
     static REVOKE_ACTION = 'revoke';
     static RECOVERY_ACTION = 'recovery';
@@ -40,9 +40,7 @@ export default class JWTUtils {
         return {
             id: user.id,
             email: user.email,
-            username: user.username,
-            profile: user.profile,
-            action: JWTUtils.APP_LOGGING_ACTION,
+            action: JWTUtils.APP_AUTH_ACTION,
             type: JWTUtils.USER_TOKEN,
         }
     }

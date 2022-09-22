@@ -50,10 +50,10 @@ export default class OrderController extends BaseController {
             const order = new Order(req.body);
 
             if (order.date == undefined) {
-                return response.badRequest('Missing one of these fields: date')
+                return response.badRequest('Missing one of these fields: date', HTMLResponse.MISSING_DATA_STATUS)
             }
             if (order.userId == undefined && order.device == undefined) {
-                return response.badRequest('The order must be linked to an user or a device')
+                return response.badRequest('The order must be linked to an user or a device', HTMLResponse.MISSING_DATA_STATUS)
             }
 
             const result = await this.query("INSERT INTO " + Order.table() + " SET ?", order.toSQL());
@@ -72,10 +72,10 @@ export default class OrderController extends BaseController {
             const order = new Order(req.body);
     
             if (order.date == undefined) {
-                return response.badRequest('Missing one of these fields: date')
+                return response.badRequest('Missing one of these fields: date', HTMLResponse.MISSING_DATA_STATUS)
             }
             if (order.userId == undefined && order.device == undefined) {
-                return response.badRequest('The order must be linked to an user or a device')
+                return response.badRequest('The order must be linked to an user or a device', HTMLResponse.MISSING_DATA_STATUS)
             }
     
             const result = await this.query("UPDATE " + Order.table() + " SET ? WHERE id = ?", [order.toSQL(), id]);

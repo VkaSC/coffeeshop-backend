@@ -39,7 +39,7 @@ export default class ProductControler extends BaseController {
             const product = new Product(req.body)
     
             if (product.name == undefined || product.type == undefined || product.category == undefined || product.price == undefined) {
-                return response.badRequest('Missing one of these fields: nombre, grupo, categoria, pvp');
+                return response.badRequest('Missing one of these fields: nombre, grupo, categoria, pvp', HTMLResponse.MISSING_DATA_STATUS);
             }
 
             const result = await Connection.query("INSERT " + Product.table() + " product SET ?", product);
@@ -57,7 +57,7 @@ export default class ProductControler extends BaseController {
             const { id } = req.params;
             const product = new Product(req.body);
             if (product.id == undefined || product.name == undefined || product.type == undefined || product.category == undefined || product.price == undefined) {
-                return response.badRequest('Missing one of these fields: nombre, grupo, categoria, pvp');
+                return response.badRequest('Missing one of these fields: nombre, grupo, categoria, pvp', HTMLResponse.MISSING_DATA_STATUS);
             }
     
             const result = await Connection.query("UPDATE " + Product.table() + " SET ? WHERE id = ?", [product, id]);

@@ -59,7 +59,6 @@ export default class AllergenController extends BaseController {
         try {
             const { id } = req.params;
             const result = await this.query("SELECT " + Allergen.visibleFields().join(', ') + " FROM " + Allergen.table() + " WHERE id = ?", id);
-            return response.success('Allergen retrieved successfully', result);
         } catch (error) {
             return response.error(error);
         }

@@ -1,6 +1,6 @@
 import HTMLResponse from '../output/htmlResponse.output';
 import Database from '../database/database';
-import { StrUtils } from "./str.utils";
+import StrUtils from "./str.utils";
 import Utils from "../utils/core.utils";
 
 const operators = {

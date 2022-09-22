@@ -38,7 +38,7 @@ export default class ProductAllergenController extends BaseController {
             const productAllergen = new ProductAllergen(req.body);
     
             if (productAllergen.productId== undefined || productAllergen.allergenId== undefined){
-                return response.badRequest('Missing one of these fields: productId, allergenId');
+                return response.badRequest('Missing one of these fields: productId, allergenId', HTMLResponse.MISSING_DATA_STATUS);
             } 
     
             const result = await this.query("INSERT INTO " + ProductAllergen.table() + " SET ?", productAllergen);

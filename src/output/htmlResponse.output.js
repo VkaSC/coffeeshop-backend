@@ -1,9 +1,10 @@
 import HTMLCodes from './htmlCodes.output';
 import Response  from './response.output';
 
-class HTMLResponse {
+export default class HTMLResponse {
 
     static SUCCESS_STATUS = 'SUCCESS';
+    static NOT_AUTH_REFRESH_STATUS = 'NOT_AUTH_REFRESH';
     static NOT_FOUND_STATUS = 'NOT_FOUND';
     static MALFORMED_TOKEN_STATUS = 'MALFORMED_TOKEN';
     static MISSING_AUTH_STATUS = 'MISSING_AUTHORIZATION_HEADER';
@@ -30,6 +31,7 @@ class HTMLResponse {
     static USER_TEMPORARILY_BLOCKED_STATUS = 'USER_TEPORARILY_BLOCKED';
     static USER_BLOCKED_STATUS = 'USER_BLOCKED';
     static LOGIN_DENIED_STATUS = 'LOGIN_DENIED';
+    static MISSING_DATA_STATUS = 'MISSING_DATA';
 
     constructor(request, response) {
         this.request = request;
@@ -73,4 +75,3 @@ class HTMLResponse {
     }
 
 }
-module.exports = HTMLResponse;

@@ -40,7 +40,7 @@ export default class UserControler extends BaseController {
             const user = new User(req.body)
     
             if (user.name == undefined || user.lastName == undefined || user.type == undefined || user.email == undefined) {
-                return response.badRequest('Missing one of these fields: Nombre, Apellidos, Tipo de usuario, email')
+                return response.badRequest('Missing one of these fields: Nombre, Apellidos, Tipo de usuario, email', HTMLResponse.MISSING_DATA_STATUS)
             }
     
             const result = await Connection.query("INSERT " + User.table() + " product SET ?", user);
@@ -59,7 +59,7 @@ export default class UserControler extends BaseController {
             const user = new User(req.body);
     
             if (user.id == undefined || user.name == undefined || user.lastName == undefined || user.type == undefined || user.email == undefined) {
-                return response.badRequest('Missing one of these fields: Nombre, Apellidos, Tipo de usuario, email')
+                return response.badRequest('Missing one of these fields: Nombre, Apellidos, Tipo de usuario, email', HTMLResponse.MISSING_DATA_STATUS)
             }
     
             const result = await Connection.query("UPDATE " + User.table() + " SET ? WHERE id = ?", [user, id]);

@@ -11,7 +11,6 @@ export default class Database {
     }
 
     query(query, params) {
-        console.log(connection);
         return connection ? connection.query(query, params) : undefined;
     }
 

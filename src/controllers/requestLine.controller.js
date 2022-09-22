@@ -38,7 +38,7 @@ export default class RequestLineController extends BaseController {
             const orderLine = new OrderLine(req.body)
     
             if (OrderLine.productId == undefined || OrderLine.requestId == undefined || OrderLine.quantity == undefined) {
-                return response.badRequest('Missing one of these fields: product_id, request_id, cantidad');
+                return response.badRequest('Missing one of these fields: product_id, request_id, cantidad', HTMLResponse.MISSING_DATA_STATUS);
             }
             const result = await Connection.query("INSERT " + OrderLine.table() + " product SET ?", orderLine);
             const id = result.insertId;

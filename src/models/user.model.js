@@ -7,6 +7,7 @@ export default class User{
     lastName;
     type;
     email;
+    active;
     password;
 
     constructor(obj) {
@@ -16,21 +17,27 @@ export default class User{
             this.lastName = obj.lastName;
             this.type = obj.type;
             this.email = obj.email;
+            this.active = obj.active;
             this.password = obj.password;
         }
     }
 
     static table() {
-        return `user`
+        return 'user'
     }
 
     static visibleFields() {
         return [
-            `id`,
-            `name`,
-            `lastname`,
-            `type`,
-            `email`,
+            'id',
+            'name',
+            'lastName',
+            'type',
+            'active',
+            'email',
         ]
+    }
+
+    toObject(){
+        return Utils.clone(this);
     }
 }

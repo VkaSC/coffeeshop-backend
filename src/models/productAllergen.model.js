@@ -15,14 +15,14 @@ export default class ProductAllergen {
     }
 
     static table() {
-        return`productAllergen`
+        return'productAllergen'
     }
 
     static vissibleFields() {
         return [
-            `id`,
-            `productId`,
-            `alergenId`
+            'id',
+            'productId',
+            'alergenId'
         ]
     }
 }

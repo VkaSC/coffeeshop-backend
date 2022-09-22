@@ -8,7 +8,16 @@ create table if not exists user(
     lastName varchar (150) not null,
     type enum("Admin", "Cliente") not null,
     email varchar (150) unique not null,
+    active boolean default false,
     password varchar(150) not null
+) character set = 'utf8';
+
+create table if not exists auth(
+    id int unsigned primary key auto_increment,
+    token varchar(255) not null,
+    userId int unsigned not null,
+    active boolean default true,
+    remember boolean default false
 ) character set = 'utf8';
 
 create table if not exists product(
@@ -79,3 +88,5 @@ insert into product (name, type, category, details, price) values ('Nestea', 'Gr
 insert into product (name, type, category, details, price) values ('Jamon', 'Grupo 3', 'Bocadillos', 'Pan de barra con jamón serrano', 1.0 );
 insert into product (name, type, category, details, price) values ('Mixto', 'Grupo 3', 'Bocadillos', 'Pan de molde con jamón y queso', 1.0 );
 insert into product (name, type, category, details, price) values ('Pollo', 'Grupo 3', 'Bocadillos', 'Pan de barra con pechuga de pavo, lechuga y mayonesa', 1.50 );
+
+insert into user (name, lastName, type, email, active, password) values ('Juan José', 'Longoria López', 'Admin', 'juanjoselongoria@gmail.com', true, '$2a$10$fcec.2o2ifrkszLchrPeF.ES/DtQ012A3hxRy9EWdwbRJI.hCz132');
