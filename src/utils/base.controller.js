@@ -50,12 +50,16 @@ export default class BaseController {
     }
 
     createLimitClause(req) {
-        let limit = req.query.limit ? Number(req.query.limit) : 200;
-        if (limit > 200) {
-            limit = 200;
+        let limitClause = '';
+        if(req.user && (req.user.type !== 'Admin' ||  (req.user.type === 'Admin' && (!req.query.all || req.query.all.toLowerCase() === 'false')))){
+            const maxLimit = req.user.type === 'Admin' ? 1000 : 200;
+            let limit = req.query.limit ? Number(req.query.limit) : 200;
+            if (limit > maxLimit) {
+                limit = maxLimit;
+            }
+            const page = req.query.page ? Number(req.query.page) : 1;
+            limitClause = ' LIMIT ' + limit + ' OFFSET ' + ((page * limit) - limit);
         }
-        const offset = req.query.start ? Number(req.query.start) : 0;
-        const limitClause = ' LIMIT ' + limit + ' OFFSET ' + offset;
         return limitClause;
     }
 

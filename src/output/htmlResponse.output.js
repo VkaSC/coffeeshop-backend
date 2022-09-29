@@ -32,6 +32,7 @@ export default class HTMLResponse {
     static USER_BLOCKED_STATUS = 'USER_BLOCKED';
     static LOGIN_DENIED_STATUS = 'LOGIN_DENIED';
     static MISSING_DATA_STATUS = 'MISSING_DATA';
+    static LIMIT_REACHED_STATUS = 'LIMIT_REACHED';
 
     constructor(request, response) {
         this.request = request;

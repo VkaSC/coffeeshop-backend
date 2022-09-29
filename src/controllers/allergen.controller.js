@@ -2,7 +2,15 @@ import HTMLResponse from '../output/htmlResponse.output';
 import BaseController from '../utils/base.controller';
 import Allergen from '../models/allergen.model';
 import Utils from '../utils/core.utils';
+import Writer from '../utils/fileSystem/writer';
+import PathUtils from '../utils/fileSystem/pathUtils';
+import StrUtils from '../utils/str.utils';
 
+const validExtensions = [
+    'png',
+    'jpg',
+    'jpeg'
+];
 
 export default class AllergenController extends BaseController {
 
@@ -59,7 +67,13 @@ export default class AllergenController extends BaseController {
         try {
             const { id } = req.params;
             const result = await this.query("SELECT " + Allergen.visibleFields().join(', ') + " FROM " + Allergen.table() + " WHERE id = ?", id);
+            const allergen = result && result.length === 1 ? new Allergen(result[0]) : undefined;
+            if (!allergen) {
+                return response.notFound('Not found allergen with id ' + id);
+            }
+            return response.success('Allergen retrieved successfully', allergen);
         } catch (error) {
+            console.log(error);
             return response.error(error);
         }
     }
@@ -68,11 +82,12 @@ export default class AllergenController extends BaseController {
         const response = new HTMLResponse(req, res);
         try {
             const allergen = new Allergen(req.body);
-            const result = await this.query("INSERT INTO " + Allergen.table() + "SET ?", allergen);
+            const result = await this.query("INSERT INTO " + Allergen.table() + " SET ?", allergen);
             const id = result.insertId;
             const data = await this.query("SELECT " + Allergen.visibleFields().join(', ') + " FROM " + Allergen.table() + " WHERE id = ?", id);
-            return response.success('Allergen created successfully', data);
+            return response.success('Allergen created successfully', data[0]);
         } catch (error) {
+            console.log(error);
             return response.error(error);
         }
     }
@@ -82,10 +97,85 @@ export default class AllergenController extends BaseController {
         try {
             const { id } = req.params;
             const allergen = new Allergen(req.body);
+            allergen.id = id;
+            const searchResult = await this.query("SELECT " + Allergen.visibleFields().join(', ') + " FROM " + Allergen.table() + " WHERE id = ?", id);
+            const searchAllergen = searchResult && searchResult.length === 1 ? new Allergen(searchResult[0]) : undefined;
+            if (!searchAllergen) {
+                return response.notFound('Not found allergen with id ' + id);
+            }
             const result = await this.query("UPDATE " + Allergen.table() + " SET ? WHERE id = ?", [allergen, id]);
             const data = await this.query("SELECT " + Allergen.visibleFields().join(', ') + " FROM " + Allergen.table() + " WHERE id = ?", id);
-            return response.success('Allergen updated successfully', data);
+            return response.success('Allergen updated successfully', data[0]);
         } catch (error) {
+            console.log(error);
+            return response.error(error);
+        }
+    }
+
+    async upload(req, res){
+        const response = new HTMLResponse(req, res);
+        try {
+            const { id } = req.params;
+            if (!req.files || Object.keys(req.files).length === 0) {
+                return response.badRequest('Has no files to upload', HTMLResponse.TOO_LESS_DATA_STATUS);
+            } else if(Object.keys(req.files).length > 1){
+                return response.badRequest('Only can update one file at time', HTMLResponse.TOO_MUCH_DATA_STATUS);
+            }
+            let fileName = 'no_name';
+            let fullPath = req.files.file.path;
+            const searchResult = await this.query("SELECT " + Allergen.visibleFields().join(', ') + " FROM " + Allergen.table() + " WHERE id = ?", id);
+            const searchAllergen = searchResult && searchResult.length === 1 ? new Allergen(searchResult[0]) : undefined;
+            if (!searchAllergen) {
+                Writer.delete(fullPath)
+                return response.notFound('Not found allergen with id ' + id);
+            } 
+            const allergen = searchAllergen;
+            const fileSplit = fullPath.split(PathUtils.separator);
+            fileName = fileSplit[fileSplit.length - 1];
+            const extSplit = fileName.split('.');
+            const fileExt = extSplit[extSplit.length - 1].toLowerCase();
+            if (!validExtensions.includes(fileExt)) {
+                FileSystem.Writer.delete(fullPath);
+                return response.badRequest('File extension not allowed. Valid extensions ' + validExtensions.join(', '), HTMLResponse.INTEGRITY_DATA_STATUS);
+            }
+            const protocol = req.protocol;
+            const host = req.hostname;
+            const fileURL = `${protocol}://${host}:4000/images/` + fileName;
+            allergen.icon = fileURL;
+            console.log(allergen.icon);
+            const result = await this.query("UPDATE " + Allergen.table() + " SET ? WHERE id = ?", [allergen, id]);
+            const data = await this.query("SELECT " + Allergen.visibleFields().join(', ') + " FROM " + Allergen.table() + " WHERE id = ?", id);
+            return response.success('Allergen icon uploaded successfully', data[0]);
+        } catch (error) {
+            console.log(error);
+            return response.error(error);
+        }
+    }
+
+    async deleteIcon(req, res){
+        const response = new HTMLResponse(req, res);
+        try {
+            const { id } = req.params;
+            const searchResult = await this.query("SELECT " + Allergen.visibleFields().join(', ') + " FROM " + Allergen.table() + " WHERE id = ?", id);
+            const searchAllergen = searchResult && searchResult.length === 1 ? new Allergen(searchResult[0]) : undefined;
+            if (!searchAllergen) {
+                Writer.delete(fullPath)
+                return response.notFound('Not found allergen with id ' + id);
+            }
+            const allergen = searchAllergen;
+            if(searchAllergen.icon){
+                try {
+                    Writer.delete(searchAllergen.icon);
+                } catch (error) {
+                    
+                }
+            }
+            allergen.icon = undefined;
+            const result = await this.query("UPDATE " + Allergen.table() + " SET ? WHERE id = ?", [allergen, id]);
+            const data = await this.query("SELECT " + Allergen.visibleFields().join(', ') + " FROM " + Allergen.table() + " WHERE id = ?", id);
+            return response.success('Allergen icon deleted successfully', data[0]);
+        } catch (error) {
+            console.log(error);
             return response.error(error);
         }
     }
@@ -94,9 +184,22 @@ export default class AllergenController extends BaseController {
         const response = new HTMLResponse(req, res);
         try {
             const { id } = req.params;
+            const searchResult = await this.query("SELECT " + Allergen.visibleFields().join(', ') + " FROM " + Allergen.table() + " WHERE id = ?", id);
+            const searchAllergen = searchResult && searchResult.length === 1 ? new Allergen(searchResult[0]) : undefined;
+            if (!searchAllergen) {
+                return response.notFound('Not found allergen with id ' + id);
+            }
             const result = await this.query("DELETE FROM " + Allergen.table() + " WHERE id = ?", id);
+            if(searchAllergen.icon){
+                try {
+                    Writer.delete(searchAllergen.icon);
+                } catch (error) {
+                    
+                }
+            }
             return response.success('Allergen deleted successfully');
         } catch (error) {
+            console.log(error);
             return response.error(error);
         }
     }

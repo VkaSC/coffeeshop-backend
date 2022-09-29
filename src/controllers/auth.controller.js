@@ -12,7 +12,6 @@ import bcrypt from 'bcryptjs';
 export default class AuthController extends BaseController {
 
     async login(req, res) {
-        console.log(bcrypt.hashSync('1234'));
         const response = new HTMLResponse(req, res);
         try {
             const { email, password, remember } = req.body;
@@ -107,10 +106,20 @@ export default class AuthController extends BaseController {
                 const jwtUtils = new JWTUtils(3);
                 const activateToken = jwtUtils.generate({ id: user.id, action: JWTUtils.ACTIVATE_ACTION });
                 const revokeToken = jwtUtils.generate({ id: user.id, action: JWTUtils.REVOKE_ACTION });
+                const tokenActivation = new Token();
+                tokenActivation.token = activateToken;
+                tokenActivation.active = true;
+                tokenActivation.userId = user.id;
+                await this.query('INSERT into ' + Token.table() + ' SET ?', [tokenActivation]);
+                const tokenRevocation = new Token();
+                tokenRevocation.token = revokeToken;
+                tokenRevocation.active = true;
+                tokenRevocation.userId = user.id;
+                await this.query('INSERT into ' + Token.table() + ' SET ?', [tokenRevocation]);
                 const mailer = new Mailer();
                 mailer.addModel(User.table(), user);
                 mailer.addModel('urls', { activate: config.frontHost + '/activar/' + activateToken, revoke: config.frontHost + '/revocar/' + revokeToken });
-                await mailer.sendEmail(config.email, user.email, userCommunications.welcome.emailSubject, userCommunications.welcome.emailHTMLBody);
+                await mailer.sendEmail(config.email, user.email, userCommunications.activation.emailSubject, userCommunications.activation.emailHTMLBody);
                 return response.success('Email Send Successfully');
             }
         } catch (error) {
@@ -225,7 +234,7 @@ export default class AuthController extends BaseController {
             const tokenVerification = jwtUtils.verify(tokenValue);
             if (tokenVerification.success) {
                 const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' FROM ' + Token.table() + ' WHERE token = ?', [tokenValue])
-                if (tokenVerification.decoded.action !== JWTUtils.RECOVERY_ACTION || !tokenResult || tokenResult.length === 0 || !tokenResult[0].active) {
+                if ((tokenVerification.decoded.action !== JWTUtils.RECOVERY_ACTION && tokenVerification.decoded.action !== JWTUtils.CREDENTIALS_ACTION) || !tokenResult || tokenResult.length === 0 || !tokenResult[0].active) {
                     return response.forbidden('Permission Denied', HTMLResponse.USER_PERMISSION_DENIED_STATUS);
                 }
                 const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' FROM ' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
@@ -233,10 +242,12 @@ export default class AuthController extends BaseController {
                     return response.notFound('User not found');
                 }
                 const user = new User(userResult[0]);
-                if (!user.active) {
+                if (!user.active && tokenVerification.decoded.action !== JWTUtils.CREDENTIALS_ACTION) {
                     return response.unauthorized('The user is not active.', HTMLResponse.INACTIVE_USER_STATUS);
+                } else if (!user.active && tokenVerification.decoded.action === JWTUtils.CREDENTIALS_ACTION) {
+                    user.active = true;
                 }
-                user.password = password;
+                user.password = bcrypt.hashSync(password);
                 req.user = user;
                 await this.query('UPDATE ' + User.table() + ' SET ? WHERE id = ?', [user, user.id]);
                 tokenResult[0].active = false;

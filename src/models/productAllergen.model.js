@@ -4,25 +4,25 @@ export default class ProductAllergen {
 
     id;
     productId;
-    alergenId;
+    allergenId;
 
     constructor(obj) {
         if (Utils.isObject(obj)) {
             this.id = obj.id;
             this.productId = obj.productId;
-            this.alergenId = obj.alergenId;            
+            this.allergenId = obj.allergenId;            
         }
     }
 
     static table() {
-        return'productAllergen'
+        return'product_allergens'
     }
 
-    static vissibleFields() {
+    static visibleFields() {
         return [
             'id',
             'productId',
-            'alergenId'
+            'allergenId'
         ]
     }
 }

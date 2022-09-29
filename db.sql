@@ -45,7 +45,7 @@ create table if not exists request(
     device varchar(100),
     date bigint not null,
     userId int unsigned,
-    total int unsigned,
+    total decimal(6,2),
     foreign key (userId) references user (id) on update cascade on delete restrict
 ) character set = 'utf8';
 
@@ -69,12 +69,12 @@ create table if not exists request_line(
     productId int unsigned not null,
     requestId int unsigned not null,
     quantity int unsigned not null,
-    total int unsigned,
+    total decimal(6,2),
     foreign key (productId) references product (id) on update cascade on delete restrict,
     foreign key (requestId) references request (id) on update cascade on delete restrict    
 )character set = 'utf8';
 
-insert into app (name, scope, token) values ('SUSI', 'FullAccess', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXBwLXRva2VuIiwiaWF0IjoxNjYzMzYzNzc0LCJleHAiOjE2NjM0NTAxNzR9.fBQ0DZca6y107WLWJgHQgxrmgA7iu_D535pNjkd5zi0');
+insert into app (name, scope, token) values ('SUSI', 'FullAccess', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6MSwic2NvcGUiOiJGdWxsQWNjZXNzIiwic2VjcmV0IjpudWxsLCJ0eXBlIjoiYXBwLXRva2VuIiwiaWF0IjoxNjY0MDYyNjgyLCJleHAiOjE2NjQxNDkwODJ9.TOZUoNCkBagFsyJEXtvIJKqQkN1ysW0Vh62R4d9myTI');
 
 insert into product (name, type, category, details, price) values ('Café Solo', 'Grupo 1', 'Cafe', 'Café en vaso de 180ml', 1.0 );
 insert into product (name, type, category, details, price) values ('Infusión en Agua', 'Grupo 1', 'Cafe', 'Infusión en vaso de 180ml', 1.0 );

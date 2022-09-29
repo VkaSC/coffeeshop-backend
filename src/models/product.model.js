@@ -35,4 +35,10 @@ export default class Product {
             'price',
         ];
     }
+
+    toSQL(){
+        const data = Utils.clone(this);
+        delete data.allergens;
+        return data;
+    }
 }

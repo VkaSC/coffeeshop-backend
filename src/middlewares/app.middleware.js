@@ -1,14 +1,13 @@
 import HTMLResponse from '../output/htmlResponse.output'
+import BaseController from '../utils/base.controller';
 import JWTUtils from '../utils/jwt.utils';
-import { getConnection } from "../database/database";
 
-export default class AppMiddlewares {
+export default class AppMiddlewares extends BaseController {
 
-    static async authApp(req, res, next) {
+    async authApp(req, res, next) {
         const jwtUtils = new JWTUtils();
-        /*const Connection = await getConnection();
-        const result = await Connection.query('Select id, scope, secret from app where Name = ?', 'SUSI');
-        console.log(jwtUtils.generateApp(JWTUtils.getAppPayload(result)));*/
+        /*const result = await this.query('Select id, scope, secret from app where name = ?', 'SUSI');
+        console.log(jwtUtils.generateApp(JWTUtils.getAppPayload(result[0])));*/
         const response = new HTMLResponse(req, res);
         if (!req.header(JWTUtils.APP_AUTH_HEADER)) {
             return response.badRequest('Not ' + JWTUtils.APP_AUTH_HEADER + ' header on request', HTMLResponse.MISSING_API_KEY_STATUS);
@@ -18,14 +17,21 @@ export default class AppMiddlewares {
             //const jwtUtils = new JWTUtils();
             const tokenVerification = jwtUtils.verifyApp(token);
             if (tokenVerification.success || tokenVerification.reason === JWTUtils.EXPIRED_ERROR) {
-                if (tokenVerification.decoded.type !== JWTUtils.APP_TOKEN)
-                    return response.forbidden('Permission Denied. Wrong Token type', HTMLResponse.WRONG_TOKEN_TYPE_STATUS);
+                if (tokenVerification.decoded.type !== JWTUtils.APP_TOKEN){
+                    return response.unauthorized('Permission Denied. Wrong Token type', HTMLResponse.WRONG_TOKEN_TYPE_STATUS);
+                }
+                const existingApp = await this.query('SELECT id FROM app WHERE id = ?', [tokenVerification.decoded.clientId]);
+                if(!existingApp || existingApp.length === 0){
+                    return response.unauthorized('Permission Denied. Unautorized application', HTMLResponse.UNAUTHORIZED_STATUS);
+                }
                 req.appDecoded = tokenVerification.decoded;
             } else {
+                console.log(tokenVerification);
                 return JWTUtils.processError(response, tokenVerification);
             }
             next();
         } catch (error) {
+            console.log(error);
             return response.error('An error ocurred while trying to autenticate', error);
         }
     }

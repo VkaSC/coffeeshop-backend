@@ -6,11 +6,13 @@ import productRoutes from "./routes/product.routes";
 import orderRoutes from "./routes/order.routes";
 import allergenRoutes from "./routes/allergen.routes";
 import productAllergenRelRoutes from "./routes/productAllergenRel.routes";
-import requestLineRoutes from "./routes/requestLine.routes";
+import orderLineRoutes from "./routes/orderLine.routes";
 import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes"
+import imageRoutes from "./routes/image.routes"
 import AppMidlewares from "./middlewares/app.middleware"
 
+const appMiddleware = new AppMidlewares();
 const app=express();
 
 //settings (configuraciones)
@@ -22,16 +24,16 @@ app.use(morgan("dev"));
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(cors());
-app.use(AppMidlewares.authApp);
 
 //Routes
-app.use("/api", productRoutes);
-app.use("/api", orderRoutes);
-app.use("/api", allergenRoutes);
-app.use("/api", productAllergenRelRoutes);
-app.use("/api", requestLineRoutes);
-app.use("/api", userRoutes);
-app.use("/api", authRoutes);
+app.use("/images", imageRoutes);
+app.use("/api", [appMiddleware.authApp.bind(appMiddleware)], productRoutes);
+app.use("/api", [appMiddleware.authApp.bind(appMiddleware)], orderRoutes);
+app.use("/api", [appMiddleware.authApp.bind(appMiddleware)], allergenRoutes);
+app.use("/api", [appMiddleware.authApp.bind(appMiddleware)], productAllergenRelRoutes);
+app.use("/api", [appMiddleware.authApp.bind(appMiddleware)], orderLineRoutes);
+app.use("/api", [appMiddleware.authApp.bind(appMiddleware)], userRoutes);
+app.use("/api", [appMiddleware.authApp.bind(appMiddleware)], authRoutes);
 
 
 

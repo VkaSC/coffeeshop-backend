@@ -13,6 +13,7 @@ export default class JWTUtils {
     static ACTIVATE_ACTION = 'activate';
     static REVOKE_ACTION = 'revoke';
     static RECOVERY_ACTION = 'recovery';
+    static CREDENTIALS_ACTION = 'credentials';
     static CASE_STATUS_ACTION = 'case_status';
 
     // Header

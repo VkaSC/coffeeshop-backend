@@ -40,4 +40,12 @@ export default class User{
     toObject(){
         return Utils.clone(this);
     }
+
+    toSQL(cleanPass){
+        const obj = Utils.clone(this);
+        if(cleanPass){
+            delete obj.password;
+        }
+        return obj;
+    }
 }
