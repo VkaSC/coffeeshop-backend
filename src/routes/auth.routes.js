@@ -1,5 +1,5 @@
-import { Router } from "express";
-import AuthController from "../controllers/auth.controller";
+const { Router } = require("express");
+const AuthController = require("../controllers/auth.controller");
 
 const controller = new AuthController();
 const router = Router();
@@ -13,4 +13,4 @@ router.post("/auth/recovering/email", controller.recoveryEmail.bind(controller))
 router.put("/auth/recovery/:token", controller.recovery.bind(controller));
 router.delete("/auth/revoking/:token", controller.recovery.bind(controller));
 
-export default router;
+module.exports = router;

@@ -1,11 +1,11 @@
-import HTMLResponse from '../output/htmlResponse.output';
-import BaseController from '../utils/base.controller';
-import Product from '../models/product.model';
-import Allergen from '../models/allergen.model';
-import ProductAllergen from '../models/productAllergen.model';
-import Utils from '../utils/core.utils';
+const HTMLResponse = require('../output/htmlResponse.output');
+const BaseController = require('../utils/base.controller');
+const Product = require('../models/product.model');
+const Allergen = require('../models/allergen.model');
+const ProductAllergen = require('../models/productAllergen.model');
+const Utils = require('../utils/core.utils');
 
-export default class ProductControler extends BaseController {
+class ProductControler extends BaseController {
 
     async list(req, res) {
         const response = new HTMLResponse(req, res);
@@ -185,3 +185,4 @@ export default class ProductControler extends BaseController {
     }
 
 }
+module.exports = ProductControler;

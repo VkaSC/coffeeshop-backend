@@ -1,7 +1,7 @@
 /**
  * Method with util methods to work with Strings
  */
-export default class StrUtils {
+class StrUtils {
 
     /**
      * Method to replace data from a string
@@ -62,3 +62,4 @@ export default class StrUtils {
         return toUpper ? normalized.toUpperCase() : normalized;
     }
 }
+module.exports = StrUtils;

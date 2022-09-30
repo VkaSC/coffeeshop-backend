@@ -1,15 +1,15 @@
-import HTMLResponse from '../output/htmlResponse.output';
-import BaseController from '../utils/base.controller';
-import OrderLine from '../models/orderLine.model';
-import Utils from '../utils/core.utils';
-import DateUtils from '../utils/date.utils';
-import Order from '../models/order.model';
+const HTMLResponse = require('../output/htmlResponse.output');
+const BaseController = require('../utils/base.controller');
+const OrderLine = require('../models/orderLine.model');
+const Utils = require('../utils/core.utils');
+const DateUtils = require('../utils/date.utils');
+const Order = require('../models/order.model');
 
 const HOUR_LIMIT = 8;
 const MINUTES_LIMIT = 15;
 const PRODUCTS_LIMIT = 3;
 
-export default class OrderLineController extends BaseController {
+class OrderLineController extends BaseController {
 
     async list(req, res) {
         const response = new HTMLResponse(req, res);
@@ -68,11 +68,11 @@ export default class OrderLineController extends BaseController {
                 const orderObj = await this.query("SELECT " + Order.visibleFields().join(',') + " FROM " + Order.table() + " WHERE id = ?", [order]);
                 if (today.getUTCHours() > HOUR_LIMIT && today.getUTCMinutes() > MINUTES_LIMIT) {
                     const todayLimit = DateUtils.exactDate(today.getFullYear(), today.getMonth() + 1, today.getDate(), HOUR_LIMIT, MINUTES_LIMIT, 0);
-                    existingLines = await this.query("SELECT " + OrderLine.visibleFields().join(',') + " FROM " + OrderLine.table() + " WHERE requestId in (Select id from " + Order.table() + " WHERE device = ? and date > ?)", [orderObj[0].device, todayLimit.getTime()]);
+                    existingLines = await this.query("SELECT " + OrderLine.visibleFields().join(',') + " FROM " + OrderLine.table() + " WHERE requestId in (Select id FROM " + Order.table() + " WHERE device = ? and date > ?)", [orderObj[0].device, todayLimit.getTime()]);
                 } else {
                     const todayLimit = DateUtils.exactDate(today.getFullYear(), today.getMonth() + 1, today.getDate(), HOUR_LIMIT, MINUTES_LIMIT, 0);
                     const yesterdayLimit = new Date(todayLimit.getTime() - DateUtils.getDaysInMillis(1));
-                    existingLines = await this.query("SELECT " + OrderLine.visibleFields().join(',') + " FROM " + OrderLine.table() + " WHERE requestId in (Select id from " + Order.table() + " WHERE device = ? and date > ? and date <= ?)", [orderObj[0].device, yesterdayLimit.getTime(), todayLimit.getTime()]);
+                    existingLines = await this.query("SELECT " + OrderLine.visibleFields().join(',') + " FROM " + OrderLine.table() + " WHERE requestId in (Select id FROM " + Order.table() + " WHERE device = ? and date > ? and date <= ?)", [orderObj[0].device, yesterdayLimit.getTime(), todayLimit.getTime()]);
                 }
                 if (existingLines && existingLines.length > 0) {
                     for (const line of existingLines) {
@@ -116,6 +116,7 @@ export default class OrderLineController extends BaseController {
     }
 
 }
+module.exports = OrderLineController;
 
 
 

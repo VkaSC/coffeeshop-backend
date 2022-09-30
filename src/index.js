@@ -1,5 +1,5 @@
-import app from "./app";
-import Database from "./database/database"
+const app = require("./app");
+const Database = require("./database/database");
 const main=()=>{
     app.listen(app.get("port"));
     console.log(`Server on port ${app.get("port")}`);

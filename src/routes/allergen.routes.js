@@ -1,15 +1,15 @@
-import { Router } from "express";
-import AllergenController from "../controllers/allergen.controller";
-import UserMiddlewares from "../middlewares/user.middleware";
-import Writer from "../utils/fileSystem/writer";
+const { Router } = require("express");
+const UserMiddlewares = require("../middlewares/user.middleware");
+const AllergenController = require("../controllers/allergen.controller");
+const Writer = require("../utils/fileSystem/writer");
 const multiparty = require('connect-multiparty');
-const midlewareUpload = multiparty({ uploadDir: 'src/uploads/images' });
+const midlewareUpload = multiparty({ uploadDir: '../public/images' });
 
 const userMiddleware = new UserMiddlewares();
 const controller = new AllergenController();
 const router = Router();
 
-Writer.createFolderSync('./src/uploads/images');
+Writer.createFolderSync('../public/images');
 
 router.get("/allergen", [userMiddleware.userData.bind(userMiddleware)], controller.list.bind(controller));
 router.get("/allergen/:id", [userMiddleware.userData.bind(userMiddleware)], controller.get.bind(controller));
@@ -20,4 +20,4 @@ router.delete("/allergen/:id/icon/delete", [userMiddleware.authUser.bind(userMid
 router.delete("/allergen/:id", [userMiddleware.authUser.bind(userMiddleware)], controller.delete.bind(controller));
 
 
-export default router;
+module.exports = router;

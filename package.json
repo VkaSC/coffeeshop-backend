@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "babel-node": "babel-node --presets=@babel/preset-env",
-    "dev": "nodemon --exec npm run babel-node src/index.js"
+    "start-dev": "nodemon --exec npm run babel-node src/index.js",
+    "start": "npm run babel-node src/index.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "GPLv3",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "connect-multiparty": "^2.2.0",

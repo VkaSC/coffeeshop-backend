@@ -1,6 +1,6 @@
-import StrUtils from "./str.utils";
+const StrUtils = require("./str.utils");
 
-export default class DateUtils {
+class DateUtils {
 
     static getDaysInMillis(dayNumber){
         return (24*60*60*1000) * dayNumber;
@@ -76,3 +76,4 @@ export default class DateUtils {
         return new Date('' + year + '-' + monthStr + '-' + dayStr + 'T' + hourStr + ':' + minuteStr + ':' + secondStr + '.000Z');
     }
 }
+module.exports = DateUtils;

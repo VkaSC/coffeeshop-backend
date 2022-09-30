@@ -1,6 +1,6 @@
-import Utils from '../utils/core.utils';
+const Utils = require('../utils/core.utils');
 
-export default class OrderLine {
+class OrderLine {
     id;
     productId;
     product;
@@ -41,3 +41,4 @@ export default class OrderLine {
         return data;
     }
 }
+module.exports = OrderLine;

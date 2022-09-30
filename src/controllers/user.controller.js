@@ -1,14 +1,14 @@
-import HTMLResponse from '../output/htmlResponse.output';
-import BaseController from '../utils/base.controller';
-import User from '../models/user.model';
-import Utils from '../utils/core.utils';
-import JWTUtils from '../utils/jwt.utils';
-import Mailer from "../communications/mailer";
-import userCommunications from '../communications/templates/user.comunications';
-import bcrypt from 'bcryptjs';
+const HTMLResponse = require('../output/htmlResponse.output');
+const BaseController = require('../utils/base.controller');
+const User = require('../models/user.model');
+const Utils = require('../utils/core.utils');
+const JWTUtils = require('../utils/jwt.utils');
+const Mailer = require("../communications/mailer");
+const userCommunications = require('../communications/templates/user.comunications');
+const bcrypt = require('bcryptjs');
 
 
-export default class UserControler extends BaseController {
+class UserControler extends BaseController {
 
     async list(req, res) {
         const response = new HTMLResponse(req, res);
@@ -120,3 +120,4 @@ export default class UserControler extends BaseController {
         }
     }
 }
+module.exports = UserControler;

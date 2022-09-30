@@ -1,5 +1,5 @@
 let path = require('path');
-export default class PathUtils {
+class PathUtils {
 
     static separator = path.sep;
 
@@ -8,3 +8,4 @@ export default class PathUtils {
     }
 
 }
+module.exports = PathUtils;

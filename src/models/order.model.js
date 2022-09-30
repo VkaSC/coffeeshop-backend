@@ -1,6 +1,6 @@
-import Utils from '../utils/core.utils';
+const Utils = require('../utils/core.utils');
 
-export default class Order {
+class Order {
     id;
     device;
     date;
@@ -39,3 +39,4 @@ export default class Order {
         return data;
     }
 }
+module.exports = Order;

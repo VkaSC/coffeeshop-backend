@@ -1,27 +1,27 @@
-import express from "express";
-import morgan from "morgan";
-import cors from "cors";
+const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
 // Routes
-import productRoutes from "./routes/product.routes";
-import orderRoutes from "./routes/order.routes";
-import allergenRoutes from "./routes/allergen.routes";
-import productAllergenRelRoutes from "./routes/productAllergenRel.routes";
-import orderLineRoutes from "./routes/orderLine.routes";
-import userRoutes from "./routes/user.routes";
-import authRoutes from "./routes/auth.routes"
-import imageRoutes from "./routes/image.routes"
-import AppMidlewares from "./middlewares/app.middleware"
+const productRoutes = require("./routes/product.routes");
+const orderRoutes = require("./routes/order.routes");
+const allergenRoutes = require("./routes/allergen.routes");
+const productAllergenRelRoutes = require("./routes/productAllergenRel.routes");
+const orderLineRoutes = require("./routes/orderLine.routes");
+const userRoutes = require("./routes/user.routes");
+const authRoutes = require("./routes/auth.routes");
+const imageRoutes = require("./routes/image.routes");
+const AppMidlewares = require("./middlewares/app.middleware");
 
 const appMiddleware = new AppMidlewares();
-const app=express();
+const app = express();
 
 //settings (configuraciones)
-app.set ("port", 4000);
+app.set("port", 4000);
 
 //Middleware (intermediarios): operaciones intermedia que se realizan antes de ejecutar la información. 
-    //Generalmente son temas de seguridad o comprobación y se usa cuando es susceptible de ser usado de forma mas o menos generica.
+//Generalmente son temas de seguridad o comprobación y se usa cuando es susceptible de ser usado de forma mas o menos generica.
 app.use(morgan("dev"));
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
@@ -38,4 +38,4 @@ app.use("/api", [appMiddleware.authApp.bind(appMiddleware)], authRoutes);
 
 
 
-export default app;
+module.exports = app;

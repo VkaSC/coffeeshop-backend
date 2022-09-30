@@ -1,7 +1,7 @@
-import HTMLCodes from './htmlCodes.output';
-import Response  from './response.output';
+const HTMLCodes = require('./htmlCodes.output');
+const Response  = require('./response.output');
 
-export default class HTMLResponse {
+class HTMLResponse {
 
     static SUCCESS_STATUS = 'SUCCESS';
     static NOT_AUTH_REFRESH_STATUS = 'NOT_AUTH_REFRESH';
@@ -76,3 +76,4 @@ export default class HTMLResponse {
     }
 
 }
+module.exports = HTMLResponse;

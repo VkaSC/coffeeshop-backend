@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-export default class Writer {
+class Writer {
 
     static createFile(path, content, callback) {
         fs.writeFile(path, content, function (error) {
@@ -45,3 +45,4 @@ export default class Writer {
     }
 
 }
+module.exports = Writer;

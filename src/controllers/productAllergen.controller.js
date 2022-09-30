@@ -1,9 +1,9 @@
-import HTMLResponse from '../output/htmlResponse.output';
-import BaseController from '../utils/base.controller';
-import ProductAllergen from '../models/productAllergen.model';
-import Utils from '../utils/core.utils';
+const HTMLResponse = require('../output/htmlResponse.output');
+const BaseController = require('../utils/base.controller');
+const ProductAllergen = require('../models/productAllergen.model');
+const Utils = require('../utils/core.utils');
 
-export default class ProductAllergenController extends BaseController {
+class ProductAllergenController extends BaseController {
 
     async list(req, res) {
         const response = new HTMLResponse(req, res);
@@ -71,5 +71,6 @@ export default class ProductAllergenController extends BaseController {
     }
 
 }
+module.exports = ProductAllergenController;
 
 

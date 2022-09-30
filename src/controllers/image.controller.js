@@ -1,11 +1,11 @@
-import HTMLResponse from '../output/htmlResponse.output';
-import BaseController from '../utils/base.controller';
-import ProductAllergen from '../models/productAllergen.model';
-import Utils from '../utils/core.utils';
-import PathUtils from '../utils/fileSystem/pathUtils';
-import Reader from '../utils/fileSystem/reader';
+const HTMLResponse = require('../output/htmlResponse.output');
+const BaseController = require('../utils/base.controller');
+const ProductAllergen = require('../models/productAllergen.model');
+const Utils = require('../utils/core.utils');
+const PathUtils = require('../utils/fileSystem/pathUtils');
+const Reader = require('../utils/fileSystem/reader');
 
-export default class ImageController extends BaseController {
+class ImageController extends BaseController {
 
     async get(req, res) {
         const response = new HTMLResponse(req, res);
@@ -22,5 +22,5 @@ export default class ImageController extends BaseController {
         }
     }
 }
-
+module.exports = ImageController;
 

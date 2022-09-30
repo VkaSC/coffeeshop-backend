@@ -1,8 +1,8 @@
-import config from "./../config";
-import jwt from "jsonwebtoken";
-import HTMLResponse from "../output/htmlResponse.output";
+const config = require("./../config");
+const jwt = require("jsonwebtoken");
+const HTMLResponse = require("../output/htmlResponse.output");
 
-export default class JWTUtils {
+class JWTUtils {
 
     // Token Type
     static APP_TOKEN = 'app-token';
@@ -117,3 +117,4 @@ export default class JWTUtils {
             return response.error('An error ocurred while trying to autenticate', tokenVerification.error);
     }
 }
+module.exports = JWTUtils;

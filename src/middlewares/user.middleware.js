@@ -1,10 +1,10 @@
-import Token from "../models/token.model";
-import User from "../models/user.model";
-import HTMLResponse from "../output/htmlResponse.output";
-import BaseController from "../utils/base.controller";
-import JWTUtils from "../utils/jwt.utils";
+const Token = require("../models/token.model");
+const User = require("../models/user.model");
+const HTMLResponse = require("../output/htmlResponse.output");
+const BaseController = require("../utils/base.controller");
+const JWTUtils = require("../utils/jwt.utils");
 
-export default class UserMiddlewares extends BaseController {
+class UserMiddlewares extends BaseController {
 
     async authUser(req, res, next) {
         const response = new HTMLResponse(req, res);
@@ -15,14 +15,14 @@ export default class UserMiddlewares extends BaseController {
             const jwtUtils = new JWTUtils();
             const tokenVerification = jwtUtils.verify(tokenValue);
             if (tokenVerification.success) {
-                const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' FROM ' + Token.table() + ' WHERE token = ?', [tokenValue])
+                const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' = require(' + Token.table() + ' WHERE token = ?', [tokenValue])
                 if (tokenVerification.decoded.action !== JWTUtils.APP_AUTH_ACTION || !tokenResult || tokenResult.length === 0 || !tokenResult[0].active) {
                     return response.forbidden('Permission Denied', HTMLResponse.USER_PERMISSION_DENIED_STATUS);
                 }
                 if (tokenVerification.decoded.type !== JWTUtils.USER_TOKEN) {
                     return response.forbidden('Permission Denied. Wrong Token type', HTMLResponse.WRONG_TOKEN_TYPE_STATUS);
                 }
-                const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' FROM ' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
+                const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' = require(' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
                 if (!userResult || userResult.length === 0) {
                     return response.notFound('User not found');
                 }
@@ -51,14 +51,14 @@ export default class UserMiddlewares extends BaseController {
                 const jwtUtils = new JWTUtils();
                 const tokenVerification = jwtUtils.verify(tokenValue);
                 if (tokenVerification.success) {
-                    const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' FROM ' + Token.table() + ' WHERE token = ?', [tokenValue])
+                    const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' = require(' + Token.table() + ' WHERE token = ?', [tokenValue])
                     if (tokenVerification.decoded.action !== JWTUtils.APP_AUTH_ACTION || !tokenResult || tokenResult.length === 0 || !tokenResult[0].active) {
                         return response.forbidden('Permission Denied', HTMLResponse.USER_PERMISSION_DENIED_STATUS);
                     }
                     if (tokenVerification.decoded.type !== JWTUtils.USER_TOKEN) {
                         return response.forbidden('Permission Denied. Wrong Token type', HTMLResponse.WRONG_TOKEN_TYPE_STATUS);
                     }
-                    const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' FROM ' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
+                    const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' = require(' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
                     if (!userResult || userResult.length === 0) {
                         return response.notFound('User not found');
                     }
@@ -81,3 +81,4 @@ export default class UserMiddlewares extends BaseController {
     }
 
 }
+module.exports = UserMiddlewares;

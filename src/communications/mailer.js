@@ -1,8 +1,8 @@
-import nodemailer from 'nodemailer';
-import TemplateProcessor from './templateProcessor';
-import config from "./../config";
+const nodemailer = require('nodemailer');
+const TemplateProcessor = require('./templateProcessor');
+const config = require("./../config");
 
-export default class Mailer {
+class Mailer {
 
 
     constructor(service, user, password, sendHtml) {
@@ -69,3 +69,4 @@ function createOptions(from, to, subject, body, sendHtml) {
         }
     }
 }
+module.exports = Mailer;

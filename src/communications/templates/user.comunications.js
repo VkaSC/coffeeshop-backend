@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     welcome: {
         emailSubject: "Bienvenido/a a Cafetería IES Profesor Tomas Hormigo",
         emailBody: [

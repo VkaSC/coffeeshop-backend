@@ -1,4 +1,4 @@
-export default class Utils {
+class Utils {
 
     /**
    * Method to force to put the data into an array if the data must be an array
@@ -302,3 +302,4 @@ export default class Utils {
     }
 
 }
+module.exports = Utils;

@@ -1,10 +1,10 @@
-import HTMLResponse from '../output/htmlResponse.output';
-import BaseController from '../utils/base.controller';
-import Allergen from '../models/allergen.model';
-import Utils from '../utils/core.utils';
-import Writer from '../utils/fileSystem/writer';
-import PathUtils from '../utils/fileSystem/pathUtils';
-import StrUtils from '../utils/str.utils';
+const HTMLResponse = require('../output/htmlResponse.output');
+const BaseController = require('../utils/base.controller');
+const Allergen = require('../models/allergen.model');
+const Utils = require('../utils/core.utils');
+const Writer = require('../utils/fileSystem/writer');
+const PathUtils = require('../utils/fileSystem/pathUtils');
+const StrUtils = require('../utils/str.utils');
 
 const validExtensions = [
     'png',
@@ -12,7 +12,7 @@ const validExtensions = [
     'jpeg'
 ];
 
-export default class AllergenController extends BaseController {
+class AllergenController extends BaseController {
 
     async list(req, res) {
         const response = new HTMLResponse(req, res);
@@ -205,3 +205,4 @@ export default class AllergenController extends BaseController {
     }
 
 }
+module.exports = AllergenController;

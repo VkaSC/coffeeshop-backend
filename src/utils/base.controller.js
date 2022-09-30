@@ -1,7 +1,7 @@
-import HTMLResponse from '../output/htmlResponse.output';
-import Database from '../database/database';
-import StrUtils from "./str.utils";
-import Utils from "../utils/core.utils";
+const HTMLResponse = require('../output/htmlResponse.output');
+const Database = require('../database/database');
+const StrUtils = require("./str.utils");
+const Utils = require("../utils/core.utils");
 
 const operators = {
     eq: '{field} = ?',
@@ -16,7 +16,7 @@ const operators = {
     //like: 'like ?',
 };
 
-export default class BaseController {
+class BaseController {
 
     constructor(){
 
@@ -173,3 +173,4 @@ export default class BaseController {
     }
 
 }
+module.exports = BaseController;

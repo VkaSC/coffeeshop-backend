@@ -1,7 +1,7 @@
 const fs = require("fs"); //Load the filesystem module
 
 
-export default class Reader {
+class Reader {
 
     static exists(filePath) {
         return fs.existsSync(filePath);
@@ -21,3 +21,4 @@ export default class Reader {
     }
 
 }
+module.exports = Reader;

@@ -1,6 +1,6 @@
-import { Router } from "express";
-import OrderLineController from "../controllers/orderLine.controller";
-import UserMiddlewares from "../middlewares/user.middleware";
+const { Router } = require("express");
+const UserMiddlewares = require("../middlewares/user.middleware");
+const OrderLineController = require("../controllers/orderLine.controller");
 
 const userMiddleware = new UserMiddlewares();
 const controller = new OrderLineController();
@@ -12,4 +12,4 @@ router.post("/order/:order/line", [userMiddleware.userData.bind(userMiddleware)]
 router.delete("/order/:order/line/:id", [userMiddleware.userData.bind(userMiddleware)], controller.delete.bind(controller));
 
 
-export default router;
+module.exports = router;

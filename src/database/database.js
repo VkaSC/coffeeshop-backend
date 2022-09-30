@@ -1,10 +1,10 @@
-import { createConnection } from "promise-mysql";
-import config from "./../config";
+const { createConnection } = require("promise-mysql");
+const config = require("./../config");
 
 let instance;
 let connection;
 
-export default class Database {
+class Database {
 
     constructor() {
 
@@ -40,3 +40,4 @@ export default class Database {
     }
 
 }
+module.exports = Database;

@@ -1,6 +1,6 @@
-import {Router} from "express";
-import ProductAllergenController from "../controllers/productAllergen.controller";
-import UserMiddlewares from "../middlewares/user.middleware";
+const { Router } = require("express");
+const ProductAllergenController = require("../controllers/productAllergen.controller");
+const UserMiddlewares = require("../middlewares/user.middleware");
 
 const userMiddleware = new UserMiddlewares();
 const controller = new ProductAllergenController();
@@ -12,4 +12,4 @@ router.post("/productAllergen", [userMiddleware.authUser.bind(userMiddleware)], 
 router.delete("/productAllergen/:id", [userMiddleware.authUser.bind(userMiddleware)], controller.delete.bind(controller));
 
 
-export default router;
+module.exports = router;

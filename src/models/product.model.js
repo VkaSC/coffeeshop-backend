@@ -1,6 +1,6 @@
-import Utils from '../utils/core.utils';
+const Utils = require('../utils/core.utils');
 
-export default class Product {
+class Product {
     id;
     name;
     type;
@@ -42,3 +42,4 @@ export default class Product {
         return data;
     }
 }
+module.exports = Product;

@@ -1,6 +1,6 @@
-import Utils from "../utils/core.utils";
+const Utils = require("../utils/core.utils");
 
-export default class ProductAllergen {
+class ProductAllergen {
 
     id;
     productId;
@@ -26,3 +26,4 @@ export default class ProductAllergen {
         ]
     }
 }
+module.exports = ProductAllergen;

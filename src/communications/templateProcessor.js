@@ -1,6 +1,6 @@
-import StrUtils from '../utils/str.utils'
+const StrUtils = require('../utils/str.utils');
 
-export default class TemplateProcessor {
+class TemplateProcessor {
 
     static merge(template, models) {
         for (let modelName of Object.keys(models)) {
@@ -29,3 +29,4 @@ function replaceModel(template, model, parent) {
     }
     return template;
 }
+module.exports = TemplateProcessor;
