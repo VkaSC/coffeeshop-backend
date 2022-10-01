@@ -15,14 +15,14 @@ class UserMiddlewares extends BaseController {
             const jwtUtils = new JWTUtils();
             const tokenVerification = jwtUtils.verify(tokenValue);
             if (tokenVerification.success) {
-                const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' = require(' + Token.table() + ' WHERE token = ?', [tokenValue])
+                const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' FROM ' + Token.table() + ' WHERE token = ?', [tokenValue])
                 if (tokenVerification.decoded.action !== JWTUtils.APP_AUTH_ACTION || !tokenResult || tokenResult.length === 0 || !tokenResult[0].active) {
                     return response.forbidden('Permission Denied', HTMLResponse.USER_PERMISSION_DENIED_STATUS);
                 }
                 if (tokenVerification.decoded.type !== JWTUtils.USER_TOKEN) {
                     return response.forbidden('Permission Denied. Wrong Token type', HTMLResponse.WRONG_TOKEN_TYPE_STATUS);
                 }
-                const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' = require(' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
+                const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' FROM ' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
                 if (!userResult || userResult.length === 0) {
                     return response.notFound('User not found');
                 }

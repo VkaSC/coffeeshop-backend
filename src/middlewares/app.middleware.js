@@ -20,7 +20,7 @@ class AppMiddlewares extends BaseController {
                 if (tokenVerification.decoded.type !== JWTUtils.APP_TOKEN){
                     return response.unauthorized('Permission Denied. Wrong Token type', HTMLResponse.WRONG_TOKEN_TYPE_STATUS);
                 }
-                const existingApp = await this.query('SELECT id = require(app WHERE id = ?', [tokenVerification.decoded.clientId]);
+                const existingApp = await this.query('SELECT id FROM app WHERE id = ?', [tokenVerification.decoded.clientId]);
                 if(!existingApp || existingApp.length === 0){
                     return response.unauthorized('Permission Denied. Unautorized application', HTMLResponse.UNAUTHORIZED_STATUS);
                 }

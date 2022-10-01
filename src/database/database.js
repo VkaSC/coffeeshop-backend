@@ -1,8 +1,8 @@
-const { createConnection } = require("promise-mysql");
+const { createConnection, createPool } = require("promise-mysql");
 const config = require("./../config");
 
 let instance;
-let connection;
+let sqlPool;
 
 class Database {
 
@@ -11,12 +11,13 @@ class Database {
     }
 
     query(query, params) {
-        return connection ? connection.query(query, params) : undefined;
+        return sqlPool ? sqlPool.query(query, params) : undefined;
     }
 
     async open() {
-        if (!connection) {
-            connection = await createConnection({
+        if(!sqlPool){
+            sqlPool = await createPool({
+                connectionLimit: 100,
                 host: config.host,
                 database: config.database,
                 user: config.user,
@@ -25,10 +26,16 @@ class Database {
         }
     }
 
-    close() {
-        if (connection) {
-            connection.end();
-            connection = undefined;
+    async release() {
+        if (sqlPool) {
+            await sqlPool.getConnection().release();
+        }
+    }
+
+    async close() {
+        if (sqlPool) {
+            await sqlPool.getConnection().release();
+            sqlPool = undefined;
         }
     }
 

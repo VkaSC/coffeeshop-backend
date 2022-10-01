@@ -152,6 +152,10 @@ class BaseController {
         return Database.getInstance().query(query, params);
     }
 
+    releaseConnection(){
+        Database.getInstance().release();
+    }
+
     async get(req, res) {
         return new HTMLResponse(req, res).notImplemented('This endpoint has not implementation');
     }
