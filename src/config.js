@@ -6,7 +6,7 @@ module.exports = {
     host: process.env.HOST || "",
     database: process.env.DATABASE || "",
     port: process.env.PORT || 0,
-    user: process.env.USER || "",
+    user: process.env.DB_USER || "",
     password: process.env.PASSWORD || "",
     jwtSecret: process.env.JWT_SECRET || "",
     jwtAppSecret: process.env.JWT_APP_SECRET || "",
