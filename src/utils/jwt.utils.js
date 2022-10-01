@@ -5,25 +5,48 @@ const HTMLResponse = require("../output/htmlResponse.output");
 class JWTUtils {
 
     // Token Type
-    static APP_TOKEN = 'app-token';
-    static USER_TOKEN = 'user-token';
+    static get APP_TOKEN() {
+        return 'app-token';
+    };
+    static get USER_TOKEN() {
+        return 'user-token';
+    };
 
-    // Actions
-    static APP_AUTH_ACTION = 'app_auth';
-    static ACTIVATE_ACTION = 'activate';
-    static REVOKE_ACTION = 'revoke';
-    static RECOVERY_ACTION = 'recovery';
-    static CREDENTIALS_ACTION = 'credentials';
-    static CASE_STATUS_ACTION = 'case_status';
+    // Act getions
+    static get APP_AUTH_ACTION() {
+        return 'app_auth';
+    };
+    static get ACTIVATE_ACTION() {
+        return 'activate';
+    };
+    static get REVOKE_ACTION() {
+        return 'revoke';
+    };
+    static get RECOVERY_ACTION() {
+        return 'recovery';
+    };
+    static get CREDENTIALS_ACTION() {
+        return 'credentials';
+    };
 
-    // Header
-    static USER_AUTH_HEADER = 'Authorization';
-    static APP_AUTH_HEADER = 'api_key';
+    // Hea getder
+    static get USER_AUTH_HEADER() {
+        return 'Authorization';
+    };
+    static get APP_AUTH_HEADER() {
+        return 'api_key';
+    };
 
-    // Errors
-    static EXPIRED_ERROR = 'TokenExpiredError';
-    static MALFOMED_ERROR = 'JsonWebTokenError';
-    static UNKNOWN_ERROR = 'unknownError';
+    // Err getors
+    static get EXPIRED_ERROR() {
+        return 'TokenExpiredError';
+    };
+    static get MALFOMED_ERROR() {
+        return 'JsonWebTokenError';
+    };
+    static get UNKNOWN_ERROR() {
+        return 'unknownError';
+    };
 
     constructor(expiresMultiply) {
         this.expiresMultiply = expiresMultiply || 1;
@@ -99,7 +122,7 @@ class JWTUtils {
         return result;
     }
 
-    static createRevokedToken(user, token, tokenVerification){
+    static createRevokedToken(user, token, tokenVerification) {
         return {
             token: token,
             user: user._id,

@@ -1,12 +1,6 @@
 const Utils = require('../utils/core.utils');
 
 class OrderLine {
-    id;
-    productId;
-    product;
-    requestId;
-    quantity;
-    total;
 
     constructor(obj) {
         if (Utils.isObject(obj)) {

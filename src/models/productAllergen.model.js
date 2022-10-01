@@ -2,10 +2,6 @@ const Utils = require("../utils/core.utils");
 
 class ProductAllergen {
 
-    id;
-    productId;
-    allergenId;
-
     constructor(obj) {
         if (Utils.isObject(obj)) {
             this.id = obj.id;

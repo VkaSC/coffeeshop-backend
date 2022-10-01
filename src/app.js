@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const config = require("./config");
 // Routes
 const productRoutes = require("./routes/product.routes");
 const orderRoutes = require("./routes/order.routes");
@@ -16,7 +17,7 @@ const appMiddleware = new AppMidlewares();
 const app = express();
 
 //settings (configuraciones)
-app.set("port", 4000);
+app.set("port", config.port);
 
 //Middleware (intermediarios): operaciones intermedia que se realizan antes de ejecutar la información. 
 //Generalmente son temas de seguridad o comprobación y se usa cuando es susceptible de ser usado de forma mas o menos generica.

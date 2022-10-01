@@ -5,6 +5,7 @@ config();
 module.exports = {
     host: process.env.HOST || "",
     database: process.env.DATABASE || "",
+    port: process.env.PORT || 0,
     user: process.env.USER || "",
     password: process.env.PASSWORD || "",
     jwtSecret: process.env.JWT_SECRET || "",

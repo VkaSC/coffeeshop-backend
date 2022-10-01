@@ -1,12 +1,6 @@
 const Utils = require('../utils/core.utils');
 
 class Order {
-    id;
-    device;
-    date;
-    userId;
-    total;
-    lines;
 
     constructor(obj) {
         if (Utils.isObject(obj)) {

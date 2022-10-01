@@ -1,13 +1,6 @@
 const Utils = require('../utils/core.utils');
 
 class Product {
-    id;
-    name;
-    type;
-    category;
-    details;
-    price;
-    allergens;
 
     constructor(obj) {
         if (Utils.isObject(obj)) {

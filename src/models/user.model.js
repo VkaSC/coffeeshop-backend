@@ -2,14 +2,6 @@ const Utils = require("../utils/core.utils");
 
 class User{
 
-    id;
-    name;
-    lastName;
-    type;
-    email;
-    active;
-    password;
-
     constructor(obj) {
         if (Utils.isObject(obj)) {
             this.id = obj.id;

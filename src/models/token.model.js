@@ -2,12 +2,6 @@ const Utils = require("../utils/core.utils");
 
 class Token {
 
-    id;
-    token;
-    userId;
-    active;
-    remember;
-
     constructor(obj) {
         if (Utils.isObject(obj)) {
             this.id = obj.id;

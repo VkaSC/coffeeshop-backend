@@ -1,15 +1,14 @@
 {
-  "name": "proyecto-ies",
+  "name": "coffeeshop-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend Application to the Coffee shop IES Tomas Hormigo",
   "main": "index.js",
   "scripts": {
     "babel-node": "babel-node --presets=@babel/preset-env",
-    "start-dev": "nodemon --exec npm run babel-node src/index.js",
-    "start": "npm run babel-node src/index.js"
+    "start-dev": "nodemon --exec npm run babel-node src/index.js --out-file dist",
+    "start": "npm run babel src/index.js"
   },
   "keywords": [],
-  "author": "",
   "license": "GPLv3",
   "dependencies": {
     "bcryptjs": "^2.4.3",
