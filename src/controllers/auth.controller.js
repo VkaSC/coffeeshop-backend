@@ -18,7 +18,7 @@ class AuthController extends BaseController {
             if (!email && !password) {
                 return response.badRequest('Email and Password are required', HTMLResponse.MISSING_DATA_STATUS);
             }
-            const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ', password = require(' + User.table() + ' WHERE email = ?', [email]);
+            const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ', password FROM ' + User.table() + ' WHERE email = ?', [email]);
             if (userResult && userResult.length > 0) {
                 const user = new User(userResult[0]);
                 const isPasswordMatch = await bcrypt.compare(password, user.password)
@@ -66,10 +66,10 @@ class AuthController extends BaseController {
                 if (tokenVerification.success) {
                     if (tokenVerification.decoded.action !== JWTUtils.APP_AUTH_ACTION)
                         return response.forbidden('Permission Denied', HTMLResponse.USER_PERMISSION_DENIED_STATUS);
-                    const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' = require(' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
+                    const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' FROM ' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
                     if (!userResult || userResult.length == 0)
                         return response.unauthorized('Not authorized to access this resource', HTMLResponse.UNAUTHORIZED_STATUS);
-                    const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' = require(' + Token.table() + ' WHERE token = ?', [tokenValue])
+                    const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' FROM ' + Token.table() + ' WHERE token = ?', [tokenValue])
                     if (tokenResult && tokenResult.length > 0) {
                         tokenResult[0].active = false;
                         await this.query('UPDATE ' + Token.table() + ' SET ? WHERE id = ?', [tokenResult[0], tokenResult[0].id]);
@@ -98,7 +98,7 @@ class AuthController extends BaseController {
             if (!email) {
                 return response.badRequest('Email is required', HTMLResponse.MISSING_DATA_STATUS);
             }
-            const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' = require(' + User.table() + ' WHERE email = ?', [email]);
+            const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' FROM ' + User.table() + ' WHERE email = ?', [email]);
             if (!userResult || userResult.length === 0)
                 return response.notFound('User not found.');
             else {
@@ -134,10 +134,10 @@ class AuthController extends BaseController {
             const jwtUtils = new JWTUtils();
             const tokenVerification = jwtUtils.verify(tokenValue);
             if (tokenVerification.success) {
-                const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' = require(' + Token.table() + ' WHERE token = ?', [tokenValue])
+                const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' FROM ' + Token.table() + ' WHERE token = ?', [tokenValue])
                 if (tokenVerification.decoded.action !== JWTUtils.ACTIVATE_ACTION || !tokenResult || tokenResult.length === 0 || !tokenResult[0].active)
                     return response.forbidden('Permission Denied', HTMLResponse.USER_PERMISSION_DENIED_STATUS);
-                const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' = require(' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
+                const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' FROM ' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
                 if (!userResult || userResult.length === 0) {
                     return response.notFound('User not found');
                 }
@@ -167,14 +167,14 @@ class AuthController extends BaseController {
             const jwtUtils = new JWTUtils();
             const tokenVerification = jwtUtils.verify(tokenValue);
             if (tokenVerification.success) {
-                const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' = require(' + Token.table() + ' WHERE token = ?', [tokenValue])
-                if (tokenVerification.decoded.action !== JWTUtils.ACTIVATE_ACTION || !tokenResult || tokenResult.length === 0 || !tokenResult[0].active) {
+                const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' FROM ' + Token.table() + ' WHERE token = ?', [tokenValue])
+                if (tokenVerification.decoded.action !== JWTUtils.APP_AUTH_ACTION || !tokenResult || tokenResult.length === 0 || !tokenResult[0].active) {
                     return response.forbidden('Permission Denied', HTMLResponse.USER_PERMISSION_DENIED_STATUS);
                 }
                 if (!tokenResult[0].remember) {
                     return response.forbidden('The token can\'t be refreshed. Please, login again', HTMLResponse.NOT_AUTH_REFRESH_STATUS);
                 }
-                const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' = require(' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
+                const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' FROM ' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
                 if (!userResult || userResult.length === 0) {
                     return response.notFound('User not found');
                 }
@@ -202,7 +202,7 @@ class AuthController extends BaseController {
         const response = new HTMLResponse(req, res);
         try {
             const email = req.body.email;
-            const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' = require(' + User.table() + ' WHERE email = ?', [email]);
+            const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' FROM ' + User.table() + ' WHERE email = ?', [email]);
             if (!userResult || userResult.length === 0) {
                 return response.notFound('User not found.');
             }
@@ -233,11 +233,11 @@ class AuthController extends BaseController {
             const jwtUtils = new JWTUtils();
             const tokenVerification = jwtUtils.verify(tokenValue);
             if (tokenVerification.success) {
-                const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' = require(' + Token.table() + ' WHERE token = ?', [tokenValue])
+                const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' FROM ' + Token.table() + ' WHERE token = ?', [tokenValue])
                 if ((tokenVerification.decoded.action !== JWTUtils.RECOVERY_ACTION && tokenVerification.decoded.action !== JWTUtils.CREDENTIALS_ACTION) || !tokenResult || tokenResult.length === 0 || !tokenResult[0].active) {
                     return response.forbidden('Permission Denied', HTMLResponse.USER_PERMISSION_DENIED_STATUS);
                 }
-                const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' = require(' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
+                const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' FROM ' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
                 if (!userResult || userResult.length === 0) {
                     return response.notFound('User not found');
                 }
@@ -269,11 +269,11 @@ class AuthController extends BaseController {
             const jwtUtils = new JWTUtils();
             const tokenVerification = jwtUtils.verify(token);
             if (tokenVerification.success) {
-                const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' = require(' + Token.table() + ' WHERE token = ?', [tokenValue])
+                const tokenResult = await this.query('SELECT ' + Token.visibleFields().join(', ') + ' FROM ' + Token.table() + ' WHERE token = ?', [tokenValue])
                 if (tokenVerification.decoded.action !== JWTUtils.REVOKE_ACTION || !tokenResult || tokenResult.length === 0 || !tokenResult[0].active) {
                     return response.forbidden('Permission Denied', HTMLResponse.USER_PERMISSION_DENIED_STATUS);
                 }
-                const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' = require(' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
+                const userResult = await this.query('SELECT ' + User.visibleFields().join(', ') + ' FROM ' + User.table() + ' WHERE id = ?', [tokenVerification.decoded.id]);
                 if (!userResult || userResult.length === 0) {
                     return response.notFound('User not found');
                 }
@@ -281,7 +281,7 @@ class AuthController extends BaseController {
                 if (user.active) {
                     return response.conflict('The user is already activated', HTMLResponse.ALREADY_ACTIVE_STATUS);
                 } else {
-                    const deleteResult = await this.query('DELETE = require(' + User.table() + ' WHERE id = ?', user.id)
+                    const deleteResult = await this.query('DELETE FROM ' + User.table() + ' WHERE id = ?', user.id)
                     tokenResult[0].active = false;
                     await this.query('UPDATE ' + Token.table() + ' SET ? WHERE id = ?', [tokenResult[0], tokenResult[0].id]);
                     return response.success('User deleted successfully');

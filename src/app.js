@@ -37,6 +37,4 @@ app.use("/api", [appMiddleware.authApp.bind(appMiddleware)], userRoutes);
 app.use("/api", [appMiddleware.authApp.bind(appMiddleware)], authRoutes);
 
 
-
-
 module.exports = app;
