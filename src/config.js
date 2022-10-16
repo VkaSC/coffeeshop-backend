@@ -4,6 +4,7 @@ config();
 
 module.exports = {
     host: process.env.HOST || "",
+    isProduction: process.env.MODE === 'PROD' || false,
     database: process.env.DATABASE || "",
     port: process.env.PORT || 0,
     user: process.env.DB_USER || "",

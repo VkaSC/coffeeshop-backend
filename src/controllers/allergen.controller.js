@@ -5,6 +5,7 @@ const Utils = require('../utils/core.utils');
 const Writer = require('../utils/fileSystem/writer');
 const PathUtils = require('../utils/fileSystem/pathUtils');
 const StrUtils = require('../utils/str.utils');
+const config = require('../config');
 
 const validExtensions = [
     'png',
@@ -141,8 +142,8 @@ class AllergenController extends BaseController {
                 return response.badRequest('File extension not allowed. Valid extensions ' + validExtensions.join(', '), HTMLResponse.INTEGRITY_DATA_STATUS);
             }
             const protocol = req.protocol;
-            const host = req.hostname;
-            const fileURL = `${protocol}://${host}:4000/images/` + fileName;
+            const host = config.isProduction ? req.hostname : req.hostname + ':4000';
+            const fileURL = `${protocol}://${host}/images/` + fileName;
             allergen.icon = fileURL;
             console.log(allergen.icon);
             const result = await this.query("UPDATE " + Allergen.table() + " SET ? WHERE id = ?", [allergen, id]);
