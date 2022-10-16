@@ -143,7 +143,7 @@ class AllergenController extends BaseController {
             }
             const protocol = req.protocol;
             const host = config.isProduction ? req.hostname : req.hostname + ':4000';
-            const fileURL = `${protocol}://${host}/images/` + fileName;
+            const fileURL = `${protocol}://${host}/api/images/` + fileName;
             allergen.icon = fileURL;
             console.log(allergen.icon);
             const result = await this.query("UPDATE " + Allergen.table() + " SET ? WHERE id = ?", [allergen, id]);
