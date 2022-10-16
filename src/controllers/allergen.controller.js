@@ -83,8 +83,10 @@ class AllergenController extends BaseController {
         try {
             const allergen = new Allergen(req.body);
             const result = await this.query("INSERT INTO " + Allergen.table() + " SET ?", allergen);
+            console.log(result);
             const id = result.insertId;
             const data = await this.query("SELECT " + Allergen.visibleFields().join(', ') + " FROM " + Allergen.table() + " WHERE id = ?", id);
+            console.log(data);
             return response.success('Allergen created successfully', data[0]);
         } catch (error) {
             console.log(error);

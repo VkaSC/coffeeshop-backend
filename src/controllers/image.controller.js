@@ -11,7 +11,7 @@ class ImageController extends BaseController {
         const response = new HTMLResponse(req, res);
         try {
             const { image } = req.params;
-            const filePath = PathUtils.resolve('..public/images/' + image);
+            const filePath = PathUtils.resolve('../public/images/' + image);
             console.log(filePath);
             if (!Reader.exists(filePath))
                 return response.notFound('Not found image with name: ' + image);
