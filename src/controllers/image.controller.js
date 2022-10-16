@@ -15,8 +15,8 @@ class ImageController extends BaseController {
             console.log(filePath);
             if (!Reader.exists(filePath))
                 return response.notFound('Not found image with name: ' + image);
-            // return response.sendFile(filePath);
-            return response.success(filePath);
+            return response.sendFile(filePath);
+            //return response.success(filePath);
         } catch (error) {
             console.log(error);
             return response.error('Ha ocurrido un error obteniendo la imagen', error);

@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(cors());
 
 //Routes
-app.use("/images", imageRoutes);
+app.use("/api", imageRoutes);
 app.use("/api", [appMiddleware.authApp.bind(appMiddleware)], productRoutes);
 app.use("/api", [appMiddleware.authApp.bind(appMiddleware)], orderRoutes);
 app.use("/api", [appMiddleware.authApp.bind(appMiddleware)], allergenRoutes);
