@@ -9,7 +9,7 @@ const userMiddleware = new UserMiddlewares();
 const controller = new AllergenController();
 const router = Router();
 
-Writer.createFolderSync('./public/images');
+Writer.createFolderSync('../public/images');
 
 router.get("/allergen", [userMiddleware.userData.bind(userMiddleware)], controller.list.bind(controller));
 router.get("/allergen/:id", [userMiddleware.userData.bind(userMiddleware)], controller.get.bind(controller));
